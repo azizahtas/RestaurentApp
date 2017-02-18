@@ -1,0 +1,669 @@
+<div class="pull-left breadcrumb_admin clear_both">
+    <div class="pull-right page_title theme_color">
+        <div class="breadcrumb">
+            <a *ngIf="_auth.isAdmin()" class="btn btn-success" data-target="#AddBranch" data-toggle="modal">Add Branch</a>
+        </div>
+    </div>
+</div>
+<div class="container clear_both padding_fix">
+    <div class="row">
+        <div class="col-md-12">
+            <section class="panel default red_border vertical_border h1">
+                <div class="block-web">
+                    <div class="porlets-content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div *ngFor="let msg of messages" class="alert alert-{{msg.type}}">
+                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                    <h2>{{msg.title}}</h2>
+                                    <h3>{{msg.message}}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <input #search_name="ngModel" name="name" [(ngModel)]="searchModal.Name" class="form-control big" type="text" placeholder="Search by Name !!">
+                            </div>
+                            <div class="col-md-5">
+                                <input #search_address="ngModel" name="address" [(ngModel)]="searchModal.Address" class="form-control big" type="text" placeholder="Search by City,State,Pin code one at a time !!">
+                            </div>
+                            <div class="col-md-1">
+                                <a class="btn btn-warning" (click)="ClearSearch()">Clear</a>
+                            </div>
+                            <div class="col-md-1">
+                                <a class="btn btn-info" (click)="CompositSearch()"><i class="fa fa-search"></i> Search</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="row" *ngIf="!view_Details">
+        <div class="col-md-4" *ngFor="let branch of searchedBranches">
+            <div class="caption-style">
+                <div>
+                    <img alt="300x200" data-src="" style="width: 350px; height: 300px;" [src]="branch.Img_Url">
+                    <div class="caption">
+                        <a *ngIf="_auth.isAdmin()" style="float: left; padding-left: 15px" class="btn btn-danger" data-target="#DeleteConfirm" data-toggle="modal"
+                            (click)="deleteBranch(branch)"><i class="fa fa-times fa-2x"></i></a>
+                            <a *ngIf="_auth.isAdmin() || (_auth.isManager() && _auth.getBranchId() == branch._id)" class="btn btn-info" data-target="#EditBranch"
+                                data-toggle="modal" (click)="editBranch(branch)"><i class="fa fa-edit fa-2x"></i></a>
+                                <div class="blur"></div>
+                                <div class="caption-text" (click)="ViewDetails(branch)">
+                                    <h1>{{branch.Name}}</h1>
+                                    <p>Location : ${{branch.Location.Name}}</p>
+                                </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row" *ngIf="view_Details">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <section class="panel default h1">
+                <div class="block-web">
+                    <div class="porlets-content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img alt="300x200" data-src="" style="width: 100%; height: 400px;" [src]="BranchView.Img_Url">
+                            </div>
+                            <div class="col-md-12">
+                                <br>
+                                <h1 style="text-align: center">
+                                    <u>{{BranchView.Name}}</u>
+                                </h1>
+                            </div>
+                            <div *ngIf="BranchView.Tables.length>0" class="col-md-1">
+                                <h2>Tables</h2>
+                            </div>
+                            <div *ngIf="BranchView.Tables.length<=0" class="col-md-12">
+                                <div class="alert alert-danger">
+                                    <h2>No tables Added Yet!</h2>
+                                </div>
+                            </div>
+
+                            <div class="col-md-offset-9">
+                                <a class="btn btn-info" (click)="BackToSearch()">
+                                    <i class="fa fa-2x fa-arrow-left"></i><span style="font-size: 24px"></span></a>
+                                <a *ngIf="_auth.isAdmin() || (_auth.isManager() && _auth.getBranchId() == BranchView._id)" class="btn btn-success" data-target="#AddTable"
+                                    data-toggle="modal"><i class="fa fa-plus fa-2x"></i> </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" *ngFor="let table of BranchView.Tables">
+                                <div class="caption-style">
+                                    <div>
+                                        <img alt="150x200" data-src="" style="width: 200px; height: 200px;" [src]="table.Img_Url">
+                                        <div class="caption" style="top: 250px">
+                                            <a *ngIf="_auth.isAdmin() || (_auth.isManager() && _auth.getBranchId() == BranchView._id)" style="float: left; padding-left: 15px"
+                                                class="btn btn-danger" data-target="#DeleteTableConfirm" data-toggle="modal"
+                                                (click)="deleteTable(table)"><i class="fa fa-times fa-2x"></i></a>
+                                                <a *ngIf="_auth.isAdmin() || (_auth.isManager() && _auth.getBranchId() == BranchView._id)" class="btn btn-info" data-target="#EditTable"
+                                                    data-toggle="modal" (click)="editTable(table)"><i class="fa fa-edit fa-2x"></i></a>
+                                                    <div class="blur" style="width: 200px;height: 150px"></div>
+                                                    <a data-target="#BookTable" data-toggle="modal" (click)="selectTable(table)">
+                                                        <div class="caption-text" style="width: 200px;height: 200px">
+                                                            <h2>Table No : {{table.TNo}}</h2>
+                                                            <h1>Capacity : {{table.Cap}}</h1>
+                                                        </div>
+                                                    </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+
+<div *ngIf="_auth.isAdmin()" class="modal fade" id="AddBranch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h2 style="text-align: center" class="modal-title" id="myModalLabel">Create Branch</h2>
+            </div>
+            <div class="modal-body">
+                <form #f="ngForm" class="form-horizontal row-border" novalidate>
+                    <div class="form-group" [ngClass]="{'has-error': !name.valid && !name.pristine && name.touched, 'has-success':name.valid}">
+                        <label class="col-sm-3 control-label big">Name </label>
+                        <div class="col-sm-8">
+                            <input #name="ngModel" name="name" (keyup)="CheckName($event.target.value)" [(ngModel)]="BranchAdd.Name" type="text" placeholder="Enter Branch Name"
+                                class="form-control big" required minlength="5">
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': name.valid && !name.pristine && !checking_Name, 'fa-times':!name.valid && !name.pristine}"></i></p>
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-spinner fa-spin': checking_Name, 'fa-times fa-spin':checking_Name_Error}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="name.valid || (name.pristine)">
+                                Name is required (minimum 5 characters).
+                            </div>
+                            <div class="alert alert-danger big err" [hidden]="!checking_Name_Error">
+                                Branch Already Present!!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !img.valid && !img.pristine, 'has-success':img.valid}">
+                        <label class="col-sm-3 control-label big">Image Url </label>
+                        <div class="col-sm-8">
+                            <input #img="ngModel" name="img" [(ngModel)]="BranchAdd.Img_Url" type="text" placeholder="Enter Image Url Of Branch" class="form-control big"
+                                required>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': img.valid && !img.pristine, 'fa-times':!img.valid && !img.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="img.valid || (img.pristine)">
+                                Image Url Is Required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !adds.valid && !adds.prestine, 'has-success':adds.valid}">
+                        <label class="col-sm-3 control-label big">Address </label>
+                        <div class="col-sm-8">
+                            <textarea #adds="ngModel" name="adds" style="height: 160px !important;" [(ngModel)]="BranchAdd.Address" placeholder="Enter Address Of This Branch!"
+                                class="form-control big" required minlength="20"></textarea>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': adds.valid && !adds.pristine, 'fa-times':!adds.valid && !adds.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="adds.valid || (adds.pristine)">
+                                You must enter address for this branch!. (Minimum 20 characters!)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <button class="btn btn-success btn-block" data-dismiss="modal" [disabled]="!f.valid || checking_Name_Error" (click)="Save(false)">Save</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-danger btn-block" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div *ngIf="_auth.isAdmin() || _auth.isManager()" class="modal fade" id="EditBranch" tabindex="-1" role="dialog" aria-labelledby="myModalEdit"
+        aria-hidden="true" style="display: none">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h2 style="text-align: center" class="modal-title" id="myModalEdit">Edit Menu Item</h2>
+                </div>
+                <div class="modal-body">
+                    <form #fE="ngForm" class="form-horizontal row-border" novalidate>
+                        <div class="form-group" [ngClass]="{'has-error': !nameE.valid && !nameE.pristine && nameE.touched, 'has-success':nameE.valid}">
+                            <label class="col-sm-3 control-label big">Name </label>
+                            <div class="col-sm-8">
+                                <input #nameE="ngModel" name="nameE" (keyup)="CheckName($event.target.value)" [(ngModel)]="BranchEdit.Name" type="text" placeholder="Enter Branch Name"
+                                    class="form-control big" required minlength="5">
+                            </div>
+                            <div class="col-md-1">
+                                <p class="help-block"><i class="fa" [ngClass]="{'fa-check': nameE.valid && !nameE.pristine && !checking_Name, 'fa-times':!nameE.valid && !nameE.pristine}"></i></p>
+                                <p class="help-block"><i class="fa" [ngClass]="{'fa-spinner fa-spin': checking_Name, 'fa-times fa-spin':checking_Name_Error}"></i></p>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="alert alert-danger big err" [hidden]="nameE.valid || (nameE.pristine)">
+                                    Name is required (minimum 5 characters).
+                                </div>
+                                <div class="alert alert-danger big err" [hidden]="!checking_Name_Error">
+                                    Menu Item Already Present!!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" [ngClass]="{'has-error': !imgE.valid && !imgE.pristine, 'has-success':imgE.valid}">
+                            <label class="col-sm-3 control-label big">Image Url </label>
+                            <div class="col-sm-8">
+                                <input #imgE="ngModel" name="imgE" [(ngModel)]="BranchEdit.Img_Url" type="text" placeholder="Enter Image Url For This Branch"
+                                    class="form-control big" required>
+                            </div>
+                            <div class="col-md-1">
+                                <p class="help-block"><i class="fa" [ngClass]="{'fa-check': imgE.valid && !imgE.pristine, 'fa-times':!imgE.valid && !imgE.pristine}"></i></p>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="alert alert-danger big err" [hidden]="imgE.valid || (imgE.pristine)">
+                                    Image Url Is Required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" [ngClass]="{'has-error': !addE.valid && !addE.pristine, 'has-success':addE.valid}">
+                            <label class="col-sm-3 control-label big">Address </label>
+                            <div class="col-sm-8">
+                                <textarea #addE="ngModel" name="addE" style="height: 160px !important;" [(ngModel)]="BranchEdit.Address" placeholder="Enter Address For This Branch"
+                                    class="form-control big" required minlength="20"></textarea>
+                            </div>
+                            <div class="col-md-1">
+                                <p class="help-block"><i class="fa" [ngClass]="{'fa-check': addE.valid && !addE.pristine, 'fa-times':!addE.valid && !addE.pristine}"></i></p>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="alert alert-danger big err" [hidden]="addE.valid || (addE.pristine)">
+                                    You must enter address for the branch!. (Minimum 20 characters!)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <button class="btn btn-success btn-block" data-dismiss="modal" [disabled]="!fE.valid || checking_Name_Error" (click)="Save(true)">Save Changes</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button class="btn btn-danger btn-block" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div *ngIf="_auth.isAdmin()" class="modal fade" id="DeleteConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalDelete"
+            aria-hidden="true" style="display: none">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h2 style="text-align: center" class="modal-title" id="myModalDelete">Confirm Delete</h2>
+                    </div>
+                    <div class="modal-body">
+                        <h1>Are You Sure You Want To Delete {{BranchDelete.Name}}?</h1>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a class="btn btn-danger btn-block" data-dismiss="modal" (click)="Delete(BranchDelete._id)">Yes!!</a>
+                            </div>
+                            <div class="col-md-6">
+                                <a class="btn btn-success btn-block" data-dismiss="modal">No!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div *ngIf="_auth.isAdmin() || (_auth.isManager() && _auth.getBranchId() == BranchView._id)" class="modal fade" id="AddTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabelT"
+                aria-hidden="true" style="display: none">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h2 style="text-align: center" class="modal-title" id="myModalLabelT">Create Table</h2>
+                        </div>
+                        <div class="modal-body">
+                            <form #ft="ngForm" class="form-horizontal row-border" novalidate>
+                                <div class="form-group" [ngClass]="{'has-error': !tno.valid && !tno.pristine && tno.touched, 'has-success':tno.valid}">
+                                    <label class="col-sm-3 control-label big">Table No </label>
+                                    <div class="col-sm-8">
+                                        <input #tno="ngModel" name="tno" (keyup)="CheckTableNo($event.target.value)" [(ngModel)]="TableAdd.TNo" type="number" placeholder="Table No"
+                                            class="form-control big" required>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p class="help-block"><i class="fa" [ngClass]="{'fa-check': tno.valid && !tno.pristine && !checking_TNo_Error, 'fa-times':!tno.valid && !tno.pristine}"></i></p>
+                                        <p class="help-block"><i class="fa" [ngClass]="{'fa-times fa-spin':checking_TNo_Error}"></i></p>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="alert alert-danger big err" [hidden]="tno.valid || (tno.pristine)">
+                                            Table Number is required.
+                                        </div>
+                                        <div class="alert alert-danger big err" [hidden]="!checking_TNo_Error">
+                                            Table Number Already Present!!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" [ngClass]="{'has-error': !cap.valid && !cap.pristine, 'has-success':cap.valid}">
+                                    <label class="col-sm-3 control-label big">Capacity </label>
+                                    <div class="col-sm-8">
+                                        <input #cap="ngModel" name="cap" value="" [(ngModel)]="TableAdd.Cap" type="number" placeholder="Table Capacity ex 4" class="form-control big"
+                                            required min="1">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p class="help-block"><i class="fa" [ngClass]="{'fa-check': cap.valid && !cap.pristine, 'fa-times':!cap.valid && !cap.pristine}"></i></p>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="alert alert-danger big err" [hidden]="cap.valid || (cap.pristine)">
+                                            Table Capacity is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" [ngClass]="{'has-error': !imgT.valid && !imgT.pristine, 'has-success':imgT.valid}">
+                                    <label class="col-sm-3 control-label big">Image Url </label>
+                                    <div class="col-sm-8">
+                                        <input #imgT="ngModel" name="imgTE" [(ngModel)]="TableAdd.Img_Url" type="text" placeholder="Enter Image Url Of Table" class="form-control big"
+                                            required>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p class="help-block"><i class="fa" [ngClass]="{'fa-check': imgT.valid && !imgT.pristine, 'fa-times':!imgT.valid && !imgT.pristine}"></i></p>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="alert alert-danger big err" [hidden]="imgT.valid || (imgT.pristine)">
+                                            Image Url Is Required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label big">Note </label>
+                                    <div class="col-sm-8">
+                                        <textarea #note="ngModel" name="note" style="height: 120px !important;" [(ngModel)]="TableAdd.Note" placeholder="Any Noted About this Table?!"
+                                            class="form-control big"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <button class="btn btn-success btn-block" data-dismiss="modal" [disabled]="!ft.valid || checking_TNo_Error" (click)="SaveTable(false)">Save</button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <button class="btn btn-danger btn-block" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div *ngIf="_auth.isAdmin() || (_auth.isManager() && _auth.getBranchId() == BranchView._id)" class="modal fade" id="EditTable" tabindex="-1" role="dialog" aria-labelledby="myModalEditTable"
+                    aria-hidden="true" style="display: none">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h2 style="text-align: center" class="modal-title" id="myModalEditTable">Edit Table</h2>
+                            </div>
+                            <div class="modal-body">
+                                <form #fTE="ngForm" class="form-horizontal row-border" novalidate>
+                                    <div class="form-group" [ngClass]="{'has-error': !tnoE.valid && !tnoE.pristine && tnoE.touched, 'has-success':tnoE.valid}">
+                                        <label class="col-sm-3 control-label big">Name </label>
+                                        <div class="col-sm-8">
+                                            <input #tnoE="ngModel" name="tnoE" (keyup)="CheckTableNo($event.target.value)" [(ngModel)]="TableEdit.TNo" type="number"
+                                                placeholder="Table No" class="form-control big" required>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': tnoE.valid && !tnoE.pristine && !checking_TNo_Error, 'fa-times':!tnoE.valid && !tnoE.pristine}"></i></p>
+                                            <p class="help-block"><i class="fa" [ngClass]="{'fa-times fa-spin':checking_TNo_Error}"></i></p>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="alert alert-danger big err" [hidden]="tnoE.valid || (tnoE.pristine)">
+                                                Table Number is required.
+                                            </div>
+                                            <div class="alert alert-danger big err" [hidden]="!checking_TNo_Error">
+                                                Table Number Already Present!!
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" [ngClass]="{'has-error': !capE.valid && !capE.pristine, 'has-success':capE.valid}">
+                                        <label class="col-sm-3 control-label big">Capacity </label>
+                                        <div class="col-sm-8">
+                                            <input #capE="ngModel" name="capE" value="" [(ngModel)]="TableEdit.Cap" type="number" placeholder="Table Capacity ex 4" class="form-control big"
+                                                required min="1">
+                                        </div>
+                                        <div class="col-md-1">
+                                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': capE.valid && !capE.pristine, 'fa-times':!capE.valid && !capE.pristine}"></i></p>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="alert alert-danger big err" [hidden]="capE.valid || (capE.pristine)">
+                                                Table Capacity is required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" [ngClass]="{'has-error': !imgTE.valid && !imgTE.pristine, 'has-success':imgTE.valid}">
+                                        <label class="col-sm-3 control-label big">Image Url </label>
+                                        <div class="col-sm-8">
+                                            <input #imgTE="ngModel" name="imgTE" [(ngModel)]="TableEdit.Img_Url" type="text" placeholder="Enter Image Url Of Table" class="form-control big"
+                                                required>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': imgTE.valid && !imgTE.pristine, 'fa-times':!imgTE.valid && !imgTE.pristine}"></i></p>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="alert alert-danger big err" [hidden]="imgTE.valid || (imgTE.pristine)">
+                                                Image Url Is Required.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label big">Note </label>
+                                        <div class="col-sm-8">
+                                            <textarea #note="ngModel" name="note" style="height: 120px !important;" [(ngModel)]="TableEdit.Note" placeholder="Any Noted About this Table?!"
+                                                class="form-control big"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <button class="btn btn-success btn-block" data-dismiss="modal" [disabled]="!fTE.valid || checking_TNo_Error" (click)="SaveTable(true)">Save Changes</button>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <button class="btn btn-danger btn-block" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div *ngIf="_auth.isAdmin() || (_auth.isManager() && _auth.getBranchId() == BranchView._id)" class="modal fade" id="DeleteTableConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalDeleteTable"
+                        aria-hidden="true" style="display: none">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h2 style="text-align: center" class="modal-title" id="myModalDeleteTable">Confirm Delete</h2>
+                                </div>
+                                <div class="modal-body">
+                                    <h1>Are You Sure You Want To Delete Table No {{TableDelete.TNo}}?</h1>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a class="btn btn-danger btn-block" data-dismiss="modal" (click)="DeleteTable(TableDelete._id)">Yes!!</a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a class="btn btn-success btn-block" data-dismiss="modal">No!</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="modal fade" id="BookTable" tabindex="-1" role="dialog" aria-labelledby="BookTableModalLabel" aria-hidden="true"
+                            style="display: none">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h2 style="text-align: center" class="modal-title" id="BookTableModalLabel">Book Table No : {{selectedTable?.TNo}}</h2>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form #sf="ngForm" class="form-horizontal row-border" novalidate>
+                                            <div *ngIf="!_auth.loggedIn()" class="form-group" [ngClass]="{'has-error': !BSemail.valid && !BSemail.pristine && BSemail.touched || checking_Email_Error, 'has-success':BSemail.valid && !checking_Email_Error}">
+                                                <label class="col-sm-3 control-label big">Name </label>
+                                                <div class="col-sm-8">
+                                                    <input name="BSemail" [(ngModel)]="userSignup.local.email" #BSemail="ngModel" (keyup)="CheckEmail($event.target.value)" type="text"
+                                                        placeholder="Enter Your Email" class="form-control big" required minlength="5">
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': BSemail.valid && !BSemail.prestine && !checking_Email, 'fa-times':!BSemail.valid && !BSemail.pristine}"></i></p>
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-spinner fa-spin': checking_Email, 'fa-times fa-spin':checking_Email_Error}"></i></p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="alert alert-danger big err" [hidden]="BSemail.valid || (BSemail.pristine)">
+                                                        Invalid Email Id!
+                                                    </div>
+                                                    <div class="alert alert-danger big err" [hidden]="!checking_Email_Error">
+                                                        This EmailId is Already Registered!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="!_auth.loggedIn()" class="form-group" [ngClass]="{'has-error': !BSpass.valid && !BSpass.pristine && BSpass.touched, 'has-success':BSpass.valid}">
+                                                <label class="col-sm-3 control-label big">Password </label>
+                                                <div class="col-sm-8">
+                                                    <input #BSpass="ngModel" name="BSpass" [(ngModel)]="userSignup.local.password" type="password" placeholder="Enter Your Password"
+                                                        class="form-control big" required minlength="5">
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': BSpass.valid && !BSpass.pristine , 'fa-times':!BSpass.valid && !BSpass.pristine}"></i></p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="alert alert-danger big err" [hidden]="BSpass.valid || (BSpass.pristine)">
+                                                        Password is required (minimum 5 characters).
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="!_auth.loggedIn()" class="form-group" [ngClass]="{'has-error': !BRpass.valid && !BRpass.pristine && BRpass.touched && (BRpass.value != BSpass?.value), 'has-success':BRpass.valid && (BRpass.value == BSpass?.value)}">
+                                                <label class="col-sm-3 control-label big">RePassword </label>
+                                                <div class="col-sm-8">
+                                                    <input #BRpass="ngModel" name="BRpass" [(ngModel)]="temp" type="password" placeholder="Retype your Password" class="form-control big"
+                                                        required minlength="5">
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': BRpass.valid && !BRpass.pristine && BRpass.touched && (BRpass.value == BSpass?.value), 'fa-times':!BRpass.valid && !BRpass.pristine && (BRpass.value != BSpass?.value)}"></i></p>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-danger big err" [hidden]="BRpass.valid || (BRpass.pristine)">
+                                                        Password Must be more than 5 characters!
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="alert alert-danger big err" [hidden]="(BRpass.value == BSpass?.value)">
+                                                        Passwords Must Match!
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div *ngIf="!_auth.loggedIn()" class="form-group" [ngClass]="{'has-error': !FName.valid && !FName.pristine && FName.touched, 'has-success':FName.valid}">
+                                                <label class="col-sm-3 control-label big">First Name </label>
+                                                <div class="col-sm-8">
+                                                    <input #FName="ngModel" name="FName" [(ngModel)]="userSignup.otherDetails.fname" type="text" placeholder="Enter First Name"
+                                                        class="form-control big" required>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': FName.valid && !FName.pristine , 'fa-times':!FName.valid && !FName.pristine}"></i></p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="alert alert-danger big err" [hidden]="FName.valid || (FName.pristine)">
+                                                        First Name is required.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="!_auth.loggedIn()" class="form-group" [ngClass]="{'has-error': !LName.valid && !LName.pristine && LName.touched, 'has-success':LName.valid}">
+                                                <label class="col-sm-3 control-label big">Last Name </label>
+                                                <div class="col-sm-8">
+                                                    <input #LName="ngModel" name="LName" [(ngModel)]="userSignup.otherDetails.lname" type="text" placeholder="Enter Last Name"
+                                                        class="form-control big" required>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': LName.valid && !LName.pristine , 'fa-times':!LName.valid && !LName.pristine}"></i></p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="alert alert-danger big err" [hidden]="LName.valid || (LName.pristine)">
+                                                        Last Name is required.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="!_auth.loggedIn()" class="form-group" [ngClass]="{'has-error': !Phone.valid && !Phone.pristine && Phone.touched, 'has-success':Phone.valid}">
+                                                <label class="col-sm-3 control-label big">Phone Number </label>
+                                                <div class="col-sm-8">
+                                                    <input #Phone="ngModel" name="Phone" [(ngModel)]="userSignup.otherDetails.phone" type="number" placeholder="Enter Phone Number"
+                                                        class="form-control big" required>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Phone.valid && !Phone.pristine , 'fa-times':!Phone.valid && !Phone.pristine}"></i></p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="alert alert-danger big err" [hidden]="Phone.valid || (Phone.pristine)">
+                                                        Phone Number is required.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" [ngClass]="{'has-error': !Date.valid && !Date.pristine && Date.touched, 'has-success':Date.valid}">
+                                                <label class="col-sm-3 control-label big">Select Date </label>
+                                                <div class="col-sm-8">
+                                                    <p-calendar [(ngModel)]="Booking.Date" dateFormat="dd/mm/yy" [minDate]="minDate" [maxDate]="maxDate" [showIcon]="true" #Date="ngModel"
+                                                        name="Date" [defaultDate]='today' (onSelect)='checkBookings()'></p-calendar>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Date.valid && !Date.pristine , 'fa-times':!Date.valid && !Date.pristine}"></i></p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="alert alert-danger big err" [hidden]="Date.valid || (Date.pristine)">
+                                                        Date is required.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" [ngClass]="{'has-error': !Time.valid && !Time.pristine && Time.touched, 'has-success':Time.valid}">
+                                                <label class="col-sm-3 control-label big">Select Time </label>
+                                                <div class="col-sm-8">
+                                                    <select [disabled]='!Date.valid' #Time="ngModel" name="Time" [(ngModel)]="Booking._TimeSlotId" class="form-control big" required>
+                                                        <option value="">Select A Time Slot</option>
+                                                        <option *ngFor="let time of CheckedTimeSlot" [value]='time._id' [disabled]='time.Disabled'>{{time.StartTime}} - {{time.EndTime}} <p *ngIf="time.Disabled">Booked</p></option>     
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Time.valid && !Time.pristine , 'fa-times':!Time.valid && !Time.pristine}"></i></p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="alert alert-danger big err" [hidden]="Time.valid || (Time.pristine)">
+                                                        TimeSlot is required.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" [ngClass]="{'has-error': !NoOfPersons.valid && !NoOfPersons.pristine && NoOfPersons.touched || NoOfPersons.value > selectedTable.Cap, 'has-success':NoOfPersons.valid && NoOfPersons.value <= selectedTable.Cap}">
+                                                <label class="col-sm-4 control-label big">Number Of Persons </label>
+                                                <div class="col-sm-7">
+                                                    <input #NoOfPersons="ngModel" name="NoOfPersons" [(ngModel)]="Booking.NoOfPersons" type="number" placeholder="Enter No Of Persons"
+                                                        class="form-control big" required>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': NoOfPersons.valid && !NoOfPersons.pristine && NoOfPersons.value <= selectedTable.Cap, 'fa-times':!NoOfPersons.valid && !NoOfPersons.pristine || NoOfPersons.value > selectedTable.Cap}"></i></p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="alert alert-danger big err" [hidden]="NoOfPersons.valid || (NoOfPersons.pristine)">
+                                                        You Must Enter No Of People that Are Going to come with you!.
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="alert alert-danger big err" [hidden]="NoOfPersons.value <= selectedTable.Cap || NoOfPersons.pristine">
+                                                        No of Persons Should not be More than Seats Available on Table!
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-sm-12" [hidden]="!incorrectSignup">
+                                                    <div class="alert alert-danger big err">
+                                                        Something went wrong! Please Try Again!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-12" [hidden]="!serverOffline">
+                                                    <div class="alert alert-danger big err">
+                                                        We are Sorry! Server Seems to be offline!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-6" *ngIf="_auth.loggedIn()">
+                                                    <button class="btn btn-success btn-block" data-dismiss="modal" [disabled]="!sf.valid || NoOfPersons.value > selectedTable.Cap" (click)="BookTable(false)">Book Table</button>
+                                                </div>
+                                                <div class="col-sm-6" *ngIf="!_auth.loggedIn()">
+                                                    <button class="btn btn-success btn-block" data-dismiss="modal" [disabled]="!sf.valid || (BRpass?.value != BSpass?.value) || NoOfPersons.value > selectedTable.Cap"
+                                                        (click)="BookTable(true)">Sign-Up & Book</button>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <button class="btn btn-danger btn-block" data-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>

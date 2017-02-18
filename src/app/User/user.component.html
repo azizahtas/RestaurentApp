@@ -1,0 +1,378 @@
+<div class="pull-left breadcrumb_admin clear_both">
+    <div class="pull-left page_title theme_color">
+        <div class="breadcrumb">
+            <a *ngIf="_auth.isAdmin()" class="btn btn-success" data-target="#AddManager" data-toggle="modal">Add Manager</a>
+        </div>
+    </div>
+</div>
+<div class="container clear_both padding_fix">
+    <div class="row" *ngIf="!serverOffline">
+        <div class="col-md-12">
+            <section class="panel default red_border vertical_border h1">
+                <div class="block-web">
+                    <div class="porlets-content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div *ngFor="let msg of messages" class="alert alert-{{msg.type}}">
+                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                    <h2>{{msg.title}}</h2>
+                                    <h3>{{msg.message}}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <input #search_fname="ngModel" name="fname" [(ngModel)]="user_search.FName" class="form-control big" type="text" (keyup)="Search(true)" placeholder="Search By First Name !!">
+                            </div>
+                            <div class="col-md-5">
+                                <input #search_lname="ngModel" name="lname" [(ngModel)]="user_search.LName" class="form-control big" type="text" (keyup)='Search(false)' placeholder="Search By Last Name !!">
+                            </div>
+                            <div class="col-md-1">
+                                <a class="btn btn-info btn-panel" (click)='showAll()'>All</a>
+                            </div>
+                            <div class="col-md-1">
+                                <a class="btn btn-warning btn-panel" (click)=clear()>Clear</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-12">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a data-toggle="tab" href="#users">Users <span class="badge bg-danger">{{userCount}}</span></a></li>
+                <li class=""><a data-toggle="tab" href="#managers" *ngIf="_auth.isAdmin()">Branch Managers <span class="badge bg-danger">{{managerCount}}</span></a></li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div id="users" class="tab-pane fade active in">
+                    <div *ngFor="let user of SearchedUsers">
+                        <section class="panel default blue_border vertical_border h1" *ngIf="!user.bm">
+                            <div class="block-web">
+                                <div class="porlets-content">
+                                   <div class="row">
+                                        <div class="col-md-5"><h2>{{user.fname}} {{user.lname}}</h2></div>   
+                                        <div class="col-md-3"><h2>{{user.phone}}</h2></div>   
+                                        <div class="col-md-1"><h2></h2></div>
+                                        <div class="col-md-1"><a class="btn btn-info btn-block"><i class="fa fa-book fa-2x"></i></a></div>   
+                                        <div class="col-md-1"><a class="btn btn-success btn-block" data-target="#EditUser" data-toggle="modal" (click)="EditUser(user)"><i class="fa fa-edit fa-2x"></i></a></div>   
+                                        <div class="col-md-1"><a class="btn btn-danger btn-block" data-target="#DeleteUserConfirm" data-toggle="modal" (click)="DeleteUser(user)" ><i class="fa fa-times fa-2x"></i></a></div>   
+                                    </div>     
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="row" *ngIf="userCount<=0">
+                        <div class="col-md-12">
+                            <h2>No Users Found</h2>
+                        </div>
+                    </div>
+                </div>
+                <div id="managers" class="tab-pane fade" *ngIf="_auth.isAdmin()">
+                    <div *ngFor="let user of SearchedUsers">
+                        <section class="panel default magenta_border vertical_border h1" *ngIf="user.bm">
+                            <div class="block-web">
+                                <div class="porlets-content">
+                                    <div class="row">
+                                        <div class="col-md-3"><h2>{{user.fname}} {{user.lname}}</h2></div>   
+                                        <div class="col-md-3"><h2>{{user.phone}}</h2></div>   
+                                        <div class="col-md-3"><h2>{{getBranchName(user._branchId)}}</h2></div>
+                                        <div class="col-md-1"><a class="btn btn-info btn-block"><i class="fa fa-book fa-2x"></i></a></div>   
+                                        <div class="col-md-1"><a class="btn btn-success btn-block" data-target="#EditUser" data-toggle="modal" (click)="EditUser(user)"><i class="fa fa-edit fa-2x"></i></a></div>   
+                                        <div class="col-md-1"><a class="btn btn-danger btn-block" data-target="#DeleteUserConfirm" data-toggle="modal" (click)="DeleteUser(user)" ><i class="fa fa-times fa-2x"></i></a></div>   
+                                    </div>     
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="row" *ngIf="managerCount<=0">
+                        <div class="col-md-12">
+                            <h2>No Managers Found</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="row" *ngIf="serverOffline">
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <h1>Server Is Offline! </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="_auth.isAdmin()" class="modal fade" id="EditUser" tabindex="-1" role="dialog" aria-labelledby="EditUserModallabel"
+    aria-hidden="true" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h2 style="text-align: center" class="modal-title" id="EditUserModallabel">Edit User</h2>
+            </div>
+            <div class="modal-body">
+                <form #sf="ngForm" class="form-horizontal row-border" novalidate>
+                    <div class="form-group" [ngClass]="{'has-error': !FName.valid && !FName.pristine && FName.touched, 'has-success':FName.valid}">
+                        <label class="col-sm-3 control-label big">First Name </label>
+                        <div class="col-sm-8">
+                            <input #FName="ngModel" name="FName" [(ngModel)]="userEdit.fname" type="text" placeholder="Enter First Name"
+                                class="form-control big" required>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': FName.valid && !FName.pristine , 'fa-times':!FName.valid && !FName.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="FName.valid || (FName.pristine)">
+                                First Name is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !LName.valid && !LName.pristine && LName.touched, 'has-success':LName.valid}">
+                        <label class="col-sm-3 control-label big">Last Name </label>
+                        <div class="col-sm-8">
+                            <input #LName="ngModel" name="LName" [(ngModel)]="userEdit.lname" type="text" placeholder="Enter Last Name" class="form-control big"
+                                required>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': LName.valid && !LName.pristine , 'fa-times':!LName.valid && !LName.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="LName.valid || (LName.pristine)">
+                                Last Name is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !Phone.valid && !Phone.pristine && Phone.touched, 'has-success':Phone.valid}">
+                        <label class="col-sm-3 control-label big">Phone Number </label>
+                        <div class="col-sm-8">
+                            <input #Phone="ngModel" name="Phone" [(ngModel)]="userEdit.phone" type="number" placeholder="Enter Phone Number"
+                                class="form-control big" required>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Phone.valid && !Phone.pristine , 'fa-times':!Phone.valid && !Phone.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="Phone.valid || (Phone.pristine)">
+                                Phone Number is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="userEdit.bm" class="form-group" [ngClass]="{'has-error': !Branch.valid && !Branch.pristine && Branch.touched, 'has-success':Branch.valid}">
+                        <label class="col-sm-3 control-label big">Select Branch </label>
+                        <div class="col-sm-8">
+                            <select #Branch="ngModel" name="Branch" [(ngModel)]="userEdit._branchId" class="form-control big">
+                                <option value="">Select A Branch</option>
+                                <option *ngFor="let branch of Branches" [value]='branch._id'>{{branch.Name}}</option>     
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Branch.valid && !Branch.pristine , 'fa-Branchs':!Branch.valid && !Branch.pristine}"></i></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" [hidden]="!incorrectSignup">
+                            <div class="alert alert-danger big err">
+                                Something went wrong! Please Try Again!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12" [hidden]="!serverOffline">
+                            <div class="alert alert-danger big err">
+                                We are Sorry! Server Seems to be offline!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <button class="btn btn-success btn-block" data-dismiss="modal" [disabled]="!sf.valid" (click)="Manager(true)">Save {{userEdit.bm?'Manager':'User'}}</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-danger btn-block" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="_auth.isAdmin()" class="modal fade" id="AddManager" tabindex="-1" role="dialog" aria-labelledby="AddUserModallabel"
+    aria-hidden="true" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h2 style="text-align: center" class="modal-title" id="AddUserModallabel">Create Manager</h2>
+            </div>
+            <div class="modal-body">
+                <form #sf="ngForm" class="form-horizontal row-border" novalidate>
+                    <div class="form-group" [ngClass]="{'has-error': !BSemail.valid && !BSemail.pristine && BSemail.touched || checking_Email_Error, 'has-success':BSemail.valid && !checking_Email_Error}">
+                        <label class="col-sm-3 control-label big">Email Id</label>
+                        <div class="col-sm-8">
+                            <input name="BSemail" [(ngModel)]="userAdd.local.email" #BSemail="ngModel" (keyup)="CheckEmail($event.target.value)" type="text"
+                                placeholder="Enter Your Email" class="form-control big" required minlength="5">
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': BSemail.valid && !BSemail.prestine && !checking_Email, 'fa-times':!BSemail.valid && !BSemail.pristine}"></i></p>
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-spinner fa-spin': checking_Email, 'fa-times fa-spin':checking_Email_Error}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="BSemail.valid || (BSemail.pristine)">
+                                Invalid Email Id!
+                            </div>
+                            <div class="alert alert-danger big err" [hidden]="!checking_Email_Error">
+                                This EmailId is Already Registered!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !BSpass.valid && !BSpass.pristine && BSpass.touched, 'has-success':BSpass.valid}">
+                        <label class="col-sm-3 control-label big">Password </label>
+                        <div class="col-sm-8">
+                            <input #BSpass="ngModel" name="BSpass" [(ngModel)]="userAdd.local.password" type="password" placeholder="Enter Your Password"
+                                class="form-control big" required minlength="5">
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': BSpass.valid && !BSpass.pristine , 'fa-times':!BSpass.valid && !BSpass.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="BSpass.valid || (BSpass.pristine)">
+                                Password is required (minimum 5 characters).
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !BRpass.valid && !BRpass.pristine && BRpass.touched && (BRpass.value != BSpass?.value), 'has-success':BRpass.valid && (BRpass.value == BSpass?.value)}">
+                        <label class="col-sm-3 control-label big">RePassword </label>
+                        <div class="col-sm-8">
+                            <input #BRpass="ngModel" name="BRpass" [(ngModel)]="temp" type="password" placeholder="Retype your Password" class="form-control big"
+                                required minlength="5">
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': BRpass.valid && !BRpass.pristine && BRpass.touched && (BRpass.value == BSpass?.value), 'fa-times':!BRpass.valid && !BRpass.pristine && (BRpass.value != BSpass?.value)}"></i></p>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="alert alert-danger big err" [hidden]="BRpass.valid || (BRpass.pristine)">
+                                Password Must be more than 5 characters!
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="alert alert-danger big err" [hidden]="(BRpass.value == BSpass?.value)">
+                                Passwords Must Match!
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !FName.valid && !FName.pristine && FName.touched, 'has-success':FName.valid}">
+                        <label class="col-sm-3 control-label big">First Name </label>
+                        <div class="col-sm-8">
+                            <input #FName="ngModel" name="FName" [(ngModel)]="userAdd.otherDetails.fname" type="text" placeholder="Enter First Name"
+                                class="form-control big" required>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': FName.valid && !FName.pristine , 'fa-times':!FName.valid && !FName.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="FName.valid || (FName.pristine)">
+                                First Name is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !LName.valid && !LName.pristine && LName.touched, 'has-success':LName.valid}">
+                        <label class="col-sm-3 control-label big">Last Name </label>
+                        <div class="col-sm-8">
+                            <input #LName="ngModel" name="LName" [(ngModel)]="userAdd.otherDetails.lname" type="text" placeholder="Enter Last Name" class="form-control big"
+                                required>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': LName.valid && !LName.pristine , 'fa-times':!LName.valid && !LName.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="LName.valid || (LName.pristine)">
+                                Last Name is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !Phone.valid && !Phone.pristine && Phone.touched, 'has-success':Phone.valid}">
+                        <label class="col-sm-3 control-label big">Phone Number </label>
+                        <div class="col-sm-8">
+                            <input #Phone="ngModel" name="Phone" [(ngModel)]="userAdd.otherDetails.phone" type="number" placeholder="Enter Phone Number"
+                                class="form-control big" required>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Phone.valid && !Phone.pristine , 'fa-times':!Phone.valid && !Phone.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="Phone.valid || (Phone.pristine)">
+                                Phone Number is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error': !Branch.valid && !Branch.pristine && Branch.touched, 'has-success':Branch.valid}">
+                        <label class="col-sm-3 control-label big">Select Branch </label>
+                        <div class="col-sm-8">
+                            <select #Branch="ngModel" name="Branch" [(ngModel)]="userAdd.otherDetails._branchId" class="form-control big" required>
+                                <option value="">Select A Branch</option>
+                                <option *ngFor="let branch of Branches" [value]='branch._id'>{{branch.Name}}</option>     
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Branch.valid && !Branch.pristine , 'fa-Branchs':!Branch.valid && !Branch.pristine}"></i></p>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger big err" [hidden]="Branch.valid || (Branch.pristine)">
+                                Branch Selection is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12" [hidden]="!incorrectSignup">
+                            <div class="alert alert-danger big err">
+                                Something went wrong! Please Try Again!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12" [hidden]="!serverOffline">
+                            <div class="alert alert-danger big err">
+                                We are Sorry! Server Seems to be offline!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <button class="btn btn-success btn-block" data-dismiss="modal" [disabled]="!sf.valid || checking_Email_Error" (click)="Manager(false)">Register Manager</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-danger btn-block" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="_auth.isAdmin() || (_auth.isManager() && _auth.getBranchId() == BranchView._id)" class="modal fade" id="DeleteUserConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalDeleteUser"
+                        aria-hidden="true" style="display: none">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h2 style="text-align: center" class="modal-title" id="myModalDeleteUser">Confirm Delete</h2>
+            </div>
+            <div class="modal-body">
+                <h1>Are You Sure You Want To Delete User {{userDelete.fname}} {{userDelete.lname}}?</h1>
+                <div class="row">
+                    <div class="col-md-6">
+                        <a class="btn btn-danger btn-block" data-dismiss="modal" (click)="Delete()">Yes!!</a>
+                    </div>
+                    <div class="col-md-6">
+                        <a class="btn btn-success btn-block" data-dismiss="modal">No!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
