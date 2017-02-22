@@ -26,7 +26,7 @@ import { CalendarModule } from 'primeng/primeng';
     top: 200px;
     left: 0;
     width: 100%;
-}      
+}
 .err{
 padding: 5px;
 }
@@ -189,7 +189,7 @@ export class BranchComponent {
                     }
                 },
                 err => { },
-                () => { this.checking_Name = false; this.checking_Name_Error = false; }
+                () => { this.checking_Name = false; this.checking_Name_Error =  false; }
                 )
         }
     }
@@ -386,7 +386,7 @@ export class BranchComponent {
         this.Booking._TimeSlotId = "";
         for(var i=0; i<this.CheckedTimeSlot.length;i++){
             for(var j=0;j<this.NonCanceledBookings.length;j++){
-                if(new Date(this.NonCanceledBookings[j].Date).valueOf() == new Date(this.Booking.Date).valueOf() 
+                if(new Date(this.NonCanceledBookings[j].Date).valueOf() == new Date(this.Booking.Date).valueOf()
                 && this.NonCanceledBookings[j]._TimeSlotId == this.CheckedTimeSlot[i]._id
                  && this.NonCanceledBookings[j]._TableId == this.selectedTable._id
                   && this.NonCanceledBookings[j]._BranchId == this.BranchView._id)

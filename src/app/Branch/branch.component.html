@@ -603,7 +603,7 @@
                                                 <div class="col-sm-8">
                                                     <select [disabled]='!Date.valid' #Time="ngModel" name="Time" [(ngModel)]="Booking._TimeSlotId" class="form-control big" required>
                                                         <option value="">Select A Time Slot</option>
-                                                        <option *ngFor="let time of CheckedTimeSlot" [value]='time._id' [disabled]='time.Disabled'>{{time.StartTime}} - {{time.EndTime}} <p *ngIf="time.Disabled">Booked</p></option>     
+                                                        <option *ngFor="let time of CheckedTimeSlot" [value]='time._id' [disabled]='time.Disabled'>{{time.StartTime}} - {{time.EndTime}} <p *ngIf="time.Disabled">Booked</p></option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-1">
