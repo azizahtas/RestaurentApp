@@ -10,40 +10,42 @@
             <section class="panel default red_border vertical_border h1">
                 <div class="block-web">
                     <div class="porlets-content">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div *ngFor="let msg of messages" class="alert alert-{{msg.type}}">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            <h2>{{msg.title}}</h2>
+                            <h3>{{msg.message}}</h3>
+                          </div>
+                        </div>
+                      </div>
                         <div class="row">
-                            <div class="col-md-12">
-                                <div *ngFor="let msg of messages" class="alert alert-{{msg.type}}">
-                                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-                                    <h2>{{msg.title}}</h2>
-                                    <h3>{{msg.message}}</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <p-calendar [(ngModel)]="searchedBooking.Date" dateFormat="dd/mm/yy" [minDate]="minDate" [maxDate]="maxDate" [showIcon]="true" #Date="ngModel"
-                                                            name="Date" [defaultDate]='today'></p-calendar>
+                                                            name="Date" [defaultDate]='today' [inputStyleClass]="['big']"></p-calendar>
                             </div>
                             <div class="col-md-3">
                                 <select  #Branch="ngModel" name="Branch" [(ngModel)]="searchedBooking._BranchId" class="form-control big"  required>
-                                    <option value="">Select A Branch Slot</option>
-                                    <option *ngFor="let branch of Branches" [value]='branch._id' (click)="branchSelected(branch)">{{branch.Name}}</option>     
+                                    <option value="">Select A Branch</option>
+                                    <option *ngFor="let branch of Branches" [value]='branch._id' (click)="branchSelected(branch)">{{branch.Name}}</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <select  #Table="ngModel" name="Table" [(ngModel)]="searchedBooking._TableId" class="form-control big" required>
-                                    <option value="">Select A Branch Slot</option>
-                                    <option *ngFor="let table of selectedBranch.Tables" [value]='table._id' >Table Number : {{table.TNo}}</option>     
+                                    <option value="">Select A Table</option>
+                                    <option *ngFor="let table of selectedBranch.Tables" [value]='table._id' >Table Number : {{table.TNo}}</option>
                                 </select>
                             </div>
-                            <div class="col-md-1">
-                                <a class="btn btn-info btn-block">Show All</a>
+                            <div class="col-md-1" style="padding-left: 0">
+                                <a class="btn btn-info btn-block big" >All</a>
                             </div>
-                            <div class="col-md-1">
-                                <a class="btn btn-info btn-block">Load Again</a>
+                            <div class="col-md-1" style="padding-left: 0">
+                                <a class="btn btn-info btn-block big" >Refresh</a>
                             </div>
-                            <div class="col-md-1">
-                                <a class="btn btn-info btn-block">Search</a>
+                            <div class="col-md-1" style="padding-left: 0">
+                                <a class="btn btn-info btn-block big" >Search</a>
                             </div>
-                            
+
                         </div>
 
 

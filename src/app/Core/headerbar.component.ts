@@ -18,6 +18,7 @@ export class HeaderBarComponent{
     incorrectSignup : boolean = false;
     serverOffline : boolean = false;
     active: boolean = false;
+    loginSuccess : boolean = false;
 
     checking_Email : boolean = false;
     checking_Email_Error : boolean = false;
@@ -34,9 +35,11 @@ export class HeaderBarComponent{
                         this.incorrect = false;
                         var token = data.data;
                         localStorage.setItem('token', token);
+                        this.loginSuccess = true;
                     }
                     else if(!data.success){
                         this.incorrect = true;
+                      this.loginSuccess = false;
                     }
                 },
                 err => {
@@ -60,13 +63,15 @@ export class HeaderBarComponent{
                         this.incorrectSignup = false;
                         var token = data.data;
                         localStorage.setItem('token', token);
+                      this.loginSuccess = true;
                     }
                     else if(!data.success){
                         this.incorrectSignup = true;
+                      this.loginSuccess = false;
                     }
                 },
                 err => {
-                    this.serverOffline = true; 
+                    this.serverOffline = true;
                 },
                 () => {}
             )
@@ -81,6 +86,11 @@ export class HeaderBarComponent{
                 },
                 err =>{this.serverOffline = true;},()=>{this.checking_Email = false;}
             )
+    }
+
+    public logout(){
+      this.loginSuccess = false;
+      this._auth.Logout();
     }
 
     public ToggleActive(){

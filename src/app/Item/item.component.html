@@ -1,7 +1,7 @@
 <div class="pull-left breadcrumb_admin clear_both">
     <div class="pull-left page_title theme_color">
-        <h1>Item</h1>
-        <h2 class="">Showing Items</h2>
+        <h1>Menu Item</h1>
+        <h2 class="">Showing Menu Items</h2>
     </div>
     <div class="pull-right page_title theme_color">
         <div class="breadcrumb">
@@ -32,18 +32,18 @@
                                     <option *ngFor="let cat of categories" [value]="cat.Name">{{cat.Name}}</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <select #search_typ="ngModel" name="type" [(ngModel)]="searchModal.Type" class="form-control big" required>
                                     <option value="">Select A Type</option>
                                     <option value="Veg">Veg</option>
                                     <option value="NonVeg">Non-Veg</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                <input #search_price="ngModel" name="price" class="form-control big" type="number" [(ngModel)]="searchModal.Price" placeholder="Price">
                             </div>
-                            <div class="col-md-1">
-                               <a class="btn btn-info" (click)="CompositSearch()"><i class="fa fa-search"></i> Search</a>
+                            <div class="col-md-1"  style="padding-left: 0">
+                               <a class="btn btn-info btn-block big" (click)="CompositSearch()"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
 

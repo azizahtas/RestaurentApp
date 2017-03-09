@@ -25,11 +25,11 @@
                             <div class="col-md-5">
                                 <input #search_lname="ngModel" name="lname" [(ngModel)]="user_search.LName" class="form-control big" type="text" (keyup)='Search(false)' placeholder="Search By Last Name !!">
                             </div>
-                            <div class="col-md-1">
-                                <a class="btn btn-info btn-panel" (click)='showAll()'>All</a>
+                            <div class="col-md-1"  style="padding-left: 0">
+                                <a class="btn btn-info btn-block big" (click)='showAll()'>All</a>
                             </div>
-                            <div class="col-md-1">
-                                <a class="btn btn-warning btn-panel" (click)=clear()>Clear</a>
+                            <div class="col-md-1" style="padding-left: 0">
+                                <a class="btn btn-warning btn-block big" (click)=clear()>Clear</a>
                             </div>
                         </div>
 
@@ -50,13 +50,13 @@
                             <div class="block-web">
                                 <div class="porlets-content">
                                    <div class="row">
-                                        <div class="col-md-5"><h2>{{user.fname}} {{user.lname}}</h2></div>   
-                                        <div class="col-md-3"><h2>{{user.phone}}</h2></div>   
+                                        <div class="col-md-5"><h2>{{user.fname}} {{user.lname}}</h2></div>
+                                        <div class="col-md-3"><h2>{{user.phone}}</h2></div>
                                         <div class="col-md-1"><h2></h2></div>
-                                        <div class="col-md-1"><a class="btn btn-info btn-block"><i class="fa fa-book fa-2x"></i></a></div>   
-                                        <div class="col-md-1"><a class="btn btn-success btn-block" data-target="#EditUser" data-toggle="modal" (click)="EditUser(user)"><i class="fa fa-edit fa-2x"></i></a></div>   
-                                        <div class="col-md-1"><a class="btn btn-danger btn-block" data-target="#DeleteUserConfirm" data-toggle="modal" (click)="DeleteUser(user)" ><i class="fa fa-times fa-2x"></i></a></div>   
-                                    </div>     
+                                        <div class="col-md-1"><a class="btn btn-info btn-block"><i class="fa fa-book fa-2x"></i></a></div>
+                                        <div class="col-md-1"><a class="btn btn-success btn-block" data-target="#EditUser" data-toggle="modal" (click)="EditUser(user)"><i class="fa fa-edit fa-2x"></i></a></div>
+                                        <div class="col-md-1"><a class="btn btn-danger btn-block" data-target="#DeleteUserConfirm" data-toggle="modal" (click)="DeleteUser(user)" ><i class="fa fa-times fa-2x"></i></a></div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -73,13 +73,13 @@
                             <div class="block-web">
                                 <div class="porlets-content">
                                     <div class="row">
-                                        <div class="col-md-3"><h2>{{user.fname}} {{user.lname}}</h2></div>   
-                                        <div class="col-md-3"><h2>{{user.phone}}</h2></div>   
+                                        <div class="col-md-3"><h2>{{user.fname}} {{user.lname}}</h2></div>
+                                        <div class="col-md-3"><h2>{{user.phone}}</h2></div>
                                         <div class="col-md-3"><h2>{{getBranchName(user._branchId)}}</h2></div>
-                                        <div class="col-md-1"><a class="btn btn-info btn-block"><i class="fa fa-book fa-2x"></i></a></div>   
-                                        <div class="col-md-1"><a class="btn btn-success btn-block" data-target="#EditUser" data-toggle="modal" (click)="EditUser(user)"><i class="fa fa-edit fa-2x"></i></a></div>   
-                                        <div class="col-md-1"><a class="btn btn-danger btn-block" data-target="#DeleteUserConfirm" data-toggle="modal" (click)="DeleteUser(user)" ><i class="fa fa-times fa-2x"></i></a></div>   
-                                    </div>     
+                                        <div class="col-md-1"><a class="btn btn-info btn-block"><i class="fa fa-book fa-2x"></i></a></div>
+                                        <div class="col-md-1"><a class="btn btn-success btn-block" data-target="#EditUser" data-toggle="modal" (click)="EditUser(user)"><i class="fa fa-edit fa-2x"></i></a></div>
+                                        <div class="col-md-1"><a class="btn btn-danger btn-block" data-target="#DeleteUserConfirm" data-toggle="modal" (click)="DeleteUser(user)" ><i class="fa fa-times fa-2x"></i></a></div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -164,7 +164,7 @@
                         <div class="col-sm-8">
                             <select #Branch="ngModel" name="Branch" [(ngModel)]="userEdit._branchId" class="form-control big">
                                 <option value="">Select A Branch</option>
-                                <option *ngFor="let branch of Branches" [value]='branch._id'>{{branch.Name}}</option>     
+                                <option *ngFor="let branch of Branches" [value]='branch._id'>{{branch.Name}}</option>
                             </select>
                         </div>
                         <div class="col-md-1">
@@ -295,9 +295,9 @@
                         </div>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': !Phone.valid && !Phone.pristine && Phone.touched, 'has-success':Phone.valid}">
-                        <label class="col-sm-3 control-label big">Phone Number </label>
+                        <label class="col-sm-3 control-label big">Mobile </label>
                         <div class="col-sm-8">
-                            <input #Phone="ngModel" name="Phone" [(ngModel)]="userAdd.otherDetails.phone" type="number" placeholder="Enter Phone Number"
+                            <input #Phone="ngModel" name="Phone" [(ngModel)]="userAdd.otherDetails.phone" type="number" placeholder="Enter Mobile Number"
                                 class="form-control big" required>
                         </div>
                         <div class="col-md-1">
@@ -310,11 +310,11 @@
                         </div>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error': !Branch.valid && !Branch.pristine && Branch.touched, 'has-success':Branch.valid}">
-                        <label class="col-sm-3 control-label big">Select Branch </label>
+                        <label class="col-sm-3 control-label big">Branch </label>
                         <div class="col-sm-8">
                             <select #Branch="ngModel" name="Branch" [(ngModel)]="userAdd.otherDetails._branchId" class="form-control big" required>
                                 <option value="">Select A Branch</option>
-                                <option *ngFor="let branch of Branches" [value]='branch._id'>{{branch.Name}}</option>     
+                                <option *ngFor="let branch of Branches" [value]='branch._id'>{{branch.Name}}</option>
                             </select>
                         </div>
                         <div class="col-md-1">

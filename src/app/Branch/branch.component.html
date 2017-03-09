@@ -25,11 +25,11 @@
                             <div class="col-md-5">
                                 <input #search_address="ngModel" name="address" [(ngModel)]="searchModal.Address" class="form-control big" type="text" placeholder="Search by City,State,Pin code one at a time !!">
                             </div>
-                            <div class="col-md-1">
-                                <a class="btn btn-warning" (click)="ClearSearch()">Clear</a>
+                            <div class="col-md-1" style="padding-left: 0">
+                                <a class="btn btn-warning btn-block big" (click)="ClearSearch()">Clear</a>
                             </div>
-                            <div class="col-md-1">
-                                <a class="btn btn-info" (click)="CompositSearch()"><i class="fa fa-search"></i> Search</a>
+                            <div class="col-md-1" style="padding-left: 0">
+                                <a class="btn btn-info btn-block big" (click)="CompositSearch()"><i class="fa fa-search"></i></a>
                             </div>
                         </div>
 
