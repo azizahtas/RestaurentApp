@@ -42,6 +42,15 @@ export class Auth{
             return null;
         }
     }
+    public getUserName():string{
+        if(this.loggedIn()){
+            var decodedToken = this.jwtHelper.decodeToken(localStorage.getItem('token'));
+            return decodedToken.fname + " " + decodedToken.lname;
+        }
+        else{
+            return null;
+        }
+    }
     public getBranchId():string{
         if(this.loggedIn()){
             var decodedToken = this.jwtHelper.decodeToken(localStorage.getItem('token'));

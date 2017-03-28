@@ -6,6 +6,7 @@ export class Branch {
     Tables : TableModal[];
     Img_Url : string;
     constructor(){
+      this._id = null;
         this.Name = "";
         this.Address = "";
         this.Location = new LocationModal();
@@ -15,11 +16,13 @@ export class Branch {
 }
 
 export class LocationModal{
-    Name : string;
+    _id : string;
+    Label : string;
     Lat : string;
     Long:string;
     constructor(){
-        this.Name = "";
+      this._id = null;
+        this.Label = "";
         this.Lat = "";
         this.Long = "";
     }

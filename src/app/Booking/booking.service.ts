@@ -62,4 +62,17 @@ export class BookingService {
             .map(res => res.json())
     }
 
+    cancelBooking(Id: String): Observable<GeneralResponseModal> {
+        return this._authHttp.put(this._baseUrl + "/Cancel/"+Id, {})
+            .map(res => res.json())
+    }
+    arrivedBooking(Id: String): Observable<GeneralResponseModal> {
+        return this._authHttp.put(this._baseUrl + "/Arrived/"+Id, {})
+            .map(res => res.json())
+    }
+    openBooking(Id: String): Observable<GeneralResponseModal> {
+        return this._authHttp.put(this._baseUrl + "/Open/"+Id, {})
+            .map(res => res.json())
+    }
+
 }

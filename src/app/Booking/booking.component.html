@@ -7,7 +7,7 @@
 <div class="container clear_both padding_fix">
     <div class="row">
         <div class="col-md-12">
-            <section class="panel default red_border vertical_border h1">
+            <section class="panel default blue_border vertical_border h1">
                 <div class="block-web">
                     <div class="porlets-content">
                       <div class="row">
@@ -19,13 +19,13 @@
                           </div>
                         </div>
                       </div>
-                        <div class="row">
+                      <div class="row">
                             <div class="col-md-2">
                                 <p-calendar [(ngModel)]="searchedBooking.Date" dateFormat="dd/mm/yy" [minDate]="minDate" [maxDate]="maxDate" [showIcon]="true" #Date="ngModel"
                                                             name="Date" [defaultDate]='today' [inputStyleClass]="['big']"></p-calendar>
                             </div>
                             <div class="col-md-3">
-                                <select  #Branch="ngModel" name="Branch" [(ngModel)]="searchedBooking._BranchId" class="form-control big"  required>
+                                <select  #Branch="ngModel" name="Branch" [(ngModel)]="searchedBooking._BranchId" class="form-control big" required>
                                     <option value="">Select A Branch</option>
                                     <option *ngFor="let branch of Branches" [value]='branch._id' (click)="branchSelected(branch)">{{branch.Name}}</option>
                                 </select>
@@ -36,23 +36,121 @@
                                     <option *ngFor="let table of selectedBranch.Tables" [value]='table._id' >Table Number : {{table.TNo}}</option>
                                 </select>
                             </div>
-                            <div class="col-md-1" style="padding-left: 0">
-                                <a class="btn btn-info btn-block big" >All</a>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-1">
+                                <a class="btn btn-info btn-block big" ><i class="fa fa-refresh"></i></a>
                             </div>
-                            <div class="col-md-1" style="padding-left: 0">
-                                <a class="btn btn-info btn-block big" >Refresh</a>
-                            </div>
-                            <div class="col-md-1" style="padding-left: 0">
-                                <a class="btn btn-info btn-block big" >Search</a>
+                            <div class="col-md-1">
+                                <a class="btn btn-info btn-block big" ><i class="fa fa-search"></i></a>
                             </div>
 
                         </div>
-
-
+                      <div class="row" style="margin-top: 25px">
+                        <div class="col-md-3"><button class="btn btn-block btn-lg" style="color: white;background-color: #333333" (click)="searchOpenBooking()">Open</button></div>
+                        <div class="col-md-3"><button class="btn btn-block btn-success btn-lg" (click)=" searchArrivedBooking()">Arrived</button></div>
+                        <div class="col-md-3"><button class="btn btn-block btn-danger btn-lg" (click)="searchCanceledBooking()">Canceled</button></div>
+                        <div class="col-md-3"><button class="btn btn-block btn-info btn-lg" (click)="showAll()">All</button></div>
+                      </div>
                     </div>
                 </div>
             </section>
         </div>
+      <div class="col-md-12" *ngIf="_auth.loggedIn()">
+        <section class="panel default vertical_border h1" *ngFor="let book of searchedBookings,let i = index"
+                 [ngClass]="{'purple_border': !book.Canceled && !book.Arrived, 'green_border' : book.Arrived, 'red_border' : book.Canceled}">
+                <div class="block-web">
+                    <div class="porlets-content">
+                      <div class="row">
+                        <div [ngClass]="{'col-md-9': (_auth.isAdmin() || _auth.isManager()),'col-md-10': (!_auth.isAdmin() || !_auth.isManager())}">
+                         <h3><span class="highlight">{{(_auth.isAdmin() || _auth.isManager())? book._UserName :"You"}} </span> {{(_auth.isAdmin() || _auth.isManager())? " Has":" Have"}} Booked Table No : <span class="highlight">{{book.TNo}}</span> On <span class="highlight">{{book.Date | date:'shortDate'}}</span> Between <span class="highlight">{{getTimeSlotName(book._TimeSlotId)}}</span>
+                         In <span class="highlight">{{getBranchName(book._BranchId)}}</span></h3>
+                        </div>
+                        <div [ngClass]="{'col-md-1': (_auth.isAdmin() || _auth.isManager()),'col-md-2': (!_auth.isAdmin() || !_auth.isManager())}"><button [disabled] = "book.Canceled" class="btn btn-danger btn-block btn-lg" (click)="selectBooking(book,i)" data-target="#CancelBookingConfirm" data-toggle="modal"><i *ngIf="(_auth.isAdmin() || _auth.isManager())" class="fa fa-times"></i> {{(_auth.isAdmin() || _auth.isManager())?"":"Cancel"}}</button></div>
+                        <div class="col-md-1" *ngIf="(_auth.isAdmin() || _auth.isManager())"><button [disabled] = "book.Arrived" class="btn btn-success btn-block btn-lg" (click)="selectBooking(book,i)" data-target="#ArrivedBookingConfirm" data-toggle="modal"><i class="fa fa-check"></i></button></div>
+                        <div class="col-md-1" *ngIf="(_auth.isAdmin() || _auth.isManager())"><button [disabled] = "!book.Arrived && !book.Canceled" class="btn btn-block btn-lg" style="color: white;background-color: #333333" (click)="selectBooking(book,i)" data-target="#OpenBookingConfirm" data-toggle="modal"><i class="fa fa-refresh"></i></button></div>
+                      </div>
+                    </div>
+                </div>
+            </section>
+      </div>
+      <div class="col-md-12" *ngIf="!_auth.loggedIn()">
+        <section class="panel default red_border vertical_border h1" style="padding: 20px;">
+          <h2 class="highlight">You Must Be logged In To See this!</h2>
+        </section>
+      </div>
+      <div class="col-md-12" *ngIf="Bookings.length <= 0">
+        <section class="panel default blue_border vertical_border h1" style="padding: 20px;">
+          <h2 class="highlight">You Dont have Any Bookings!</h2>
+        </section>
+      </div>
     </div>
 
 </div>
+
+<div *ngIf="_auth.loggedIn()" class="modal fade" id="CancelBookingConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalCancelBooking"
+     aria-hidden="true" style="display: none">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h2 style="text-align: center" class="modal-title" id="myModalCancelBooking">Confirm Cancel</h2>
+      </div>
+      <div class="modal-body">
+        <h1>Are You Sure You Want To Cancel This Booking ?</h1>
+        <div class="row">
+          <div class="col-md-6">
+            <a class="btn btn-success btn-block" data-dismiss="modal" (click)="cancelBooking(selectedBooking._id)">Yes!!</a>
+          </div>
+          <div class="col-md-6">
+            <a class="btn btn-danger btn-block" data-dismiss="modal">No!</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="_auth.loggedIn()" class="modal fade" id="ArrivedBookingConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalArrivedBooking"
+     aria-hidden="true" style="display: none">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h2 style="text-align: center" class="modal-title" id="myModalArrivedBooking">Confirm Arrived</h2>
+      </div>
+      <div class="modal-body">
+        <h1>Did {{selectedBooking._UserName}} Really Arrived ?</h1>
+        <div class="row">
+          <div class="col-md-6">
+            <a class="btn btn-success btn-block" data-dismiss="modal" (click)="arrivedBooking(selectedBooking._id)">Yes!!</a>
+          </div>
+          <div class="col-md-6">
+            <a class="btn  btn-danger btn-block" data-dismiss="modal">No!</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="_auth.loggedIn()" class="modal fade" id="OpenBookingConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalOpenBooking"
+     aria-hidden="true" style="display: none">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h2 style="text-align: center" class="modal-title" id="myModalOpenBooking">Confirm Open</h2>
+      </div>
+      <div class="modal-body">
+        <h1>Are You Sure You Want To Set Status as Open ?</h1>
+        <div class="row">
+          <div class="col-md-6">
+            <a class="btn btn-success btn-block" data-dismiss="modal" (click)="openBooking(selectedBooking._id)">Yes!!</a>
+          </div>
+          <div class="col-md-6">
+            <a class="btn  btn-danger btn-block" data-dismiss="modal">No!</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

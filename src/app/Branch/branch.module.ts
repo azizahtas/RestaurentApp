@@ -6,10 +6,10 @@ import {SharedModule} from "../Shared/shared.module";
 import {BranchService} from "./branch.service";
 import {TimeSlotService} from "../TimeSlot/timeslot.service";
 import {BookingService} from "../Booking/booking.service";
-import {CalendarModule} from "primeng/primeng";
+import {CalendarModule, CheckboxModule, GMapModule, DialogModule} from "primeng/primeng";
 
 @NgModule({
-    imports: [SharedModule,BranchRouting,CalendarModule],
+    imports: [SharedModule,BranchRouting,CalendarModule,GMapModule,DialogModule,CheckboxModule],
     declarations: [
         BranchCenterComponent,
         BranchComponent

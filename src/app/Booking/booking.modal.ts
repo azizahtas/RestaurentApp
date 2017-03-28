@@ -1,6 +1,7 @@
 export class Booking{
     _id : string;
     _UserId : string;
+    _UserName : string;
     _BranchId : string;
     _TableId : string;
     TNo : number;
@@ -9,9 +10,11 @@ export class Booking{
     NoOfPersons : number;
     Orders : Order[];
     Canceled : boolean;
+    Arrived : boolean;
 
     constructor(){
         this._UserId = "";
+      this._UserName = "";
         this._BranchId = "";
         this._TableId = "";
         this.TNo = null;
@@ -20,6 +23,7 @@ export class Booking{
         this.NoOfPersons = null;
         this.Orders = [];
         this.Canceled = false;
+        this.Arrived = false;
     }
 }
 
@@ -38,7 +42,8 @@ export class BookingSearchModal{
     _TimeSlotId : string;
     FName : string;
     LName : string;
-    Canceled : string;
+    Canceled : boolean;
+    Arrived : boolean;
     constructor(){
         this._UserId = "";
         this._BranchId = "";
@@ -47,6 +52,7 @@ export class BookingSearchModal{
         this._TimeSlotId = "";
         this.FName = "";
         this.LName = "";
-        this.Canceled = "A";
+        this.Canceled = false;
+        this.Arrived = false;
     }
 }

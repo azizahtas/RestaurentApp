@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+/// <reference path="../../../typings/globals/google.maps/index.d.ts" />
+import {Component, OnInit} from '@angular/core';
 import { Branch, BranchSearchModel, LocationModal, TableModal } from "./branch.modal";
 import { Message } from "../Shared/Message.modal";
 import { BranchService } from "./branch.service";
-import { Category } from "../Category/category.modal";
+//import {Message} from 'primeng/primeng';
+//import {} from '@types/googlemaps';
 import * as _ from "lodash"
 import { Auth } from "../Auth/auth.service";
 import { UserService } from "../User/user.service";
@@ -11,7 +13,6 @@ import { UserSignup } from "../User/user.modal";
 import { TimeSlotService } from "../TimeSlot/timeslot.service";
 import { TimeSlot, TimeSlotViewModal } from "../TimeSlot/timeslot.modal";
 import { Booking } from "../Booking/booking.modal";
-import { CalendarModule } from 'primeng/primeng';
 
 @Component({
     templateUrl: './branch.component.html',
@@ -35,7 +36,7 @@ padding: 5px;
 }
 `]
 })
-export class BranchComponent {
+export class BranchComponent implements OnInit{
     constructor(private _bran: BranchService, public _auth: Auth,
         private _user: UserService, private _timeslot: TimeSlotService,
         private _book: BookingService) { }
@@ -77,6 +78,23 @@ export class BranchComponent {
     public minDate: Date;
     public maxDate: Date;
 
+  // *********************************************** //
+ /* options: any;
+
+  overlays: any[];
+
+  dialogVisible: boolean;
+
+  markerTitle: string;
+
+  selectedPosition: any;
+
+  infoWindow: any;
+
+  draggable: boolean;
+
+  msgs: any = [];*/
+  //********************************************/
     ngOnInit() {
         this.Branches = [];
         this.TimeSlots = [];
@@ -106,6 +124,58 @@ export class BranchComponent {
         this.getAllTimeSlots();
         this.getAllNonCanceledBookings();
     }
+   /* ngAfterViewInit(){
+      this.options = {
+        center: {lat: 36.890257, lng: 30.707417},
+        zoom: 12
+      };
+      this.initOverlays();
+      this.infoWindow = new google.maps.InfoWindow();
+    }*/
+/*  handleMapClick(event) {
+    this.dialogVisible = true;
+    this.selectedPosition = event.latLng;
+  }
+
+  handleOverlayClick(event) {
+    this.msgs = [];
+    let isMarker = event.overlay.getTitle != undefined;
+
+    if(isMarker) {
+      let title = event.overlay.getTitle();
+      this.infoWindow.setContent('' + title + '');
+      this.infoWindow.open(event.map, event.overlay);
+      event.map.setCenter(event.overlay.getPosition());
+
+      this.msgs.push({severity:'info', summary:'Marker Selected', detail: title});
+    }
+    else {
+      this.msgs.push({severity:'info', summary:'Shape Selected', detail: ''});
+    }
+  }
+
+  addMarker() {
+    this.overlays.push(new google.maps.Marker({position:{lat: this.selectedPosition.lat(), lng: this.selectedPosition.lng()}, title:this.markerTitle, draggable: this.draggable}));
+    this.markerTitle = null;
+    this.dialogVisible = false;
+  }
+
+  handleDragEnd(event) {
+    this.msgs = [];
+    this.msgs.push({severity:'info', summary:'Marker Dragged', detail: event.overlay.getTitle()});
+  }
+
+  initOverlays() {
+    if(!this.overlays||!this.overlays.length) {
+      this.overlays = [
+        new google.maps.Marker({position: {lat: 36.879466, lng: 30.667648}, title:"Konyaalti"}),
+        new google.maps.Marker({position: {lat: 36.883707, lng: 30.689216}, title:"Ataturk Park"}),
+        new google.maps.Marker({position: {lat: 36.885233, lng: 30.702323}, title:"Oldtown"}),
+        new google.maps.Circle({ center: new google.maps.LatLng(36.90707, 30.56533), fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500}),
+      ];
+    }
+  }*/
+
     ViewDetails(branch: Branch) {
         this.BranchView = branch;
         this.view_Details = true;
@@ -300,6 +370,7 @@ export class BranchComponent {
         this.Booking._BranchId = this.BranchView._id;
         if (this._auth.loggedIn()) {
             this.Booking._UserId = this._auth.getId();
+            this.Booking._UserName = this._auth.getUserName();
         }
         this.resetCheckedTimeSlots();
         this.getAllNonCanceledBookings();
@@ -460,7 +531,7 @@ export class BranchComponent {
                     for(var i=0 ; i<  this.TimeSlots.length; i++){
                       var newTimeSlot = new TimeSlotViewModal();
                       newTimeSlot._id =  this.TimeSlots[i]._id;
-                      newTimeSlot.StartTime =  this.TimeSlots[i].StartTime
+                      newTimeSlot.StartTime =  this.TimeSlots[i].StartTime;
                       newTimeSlot.EndTime =  this.TimeSlots[i].EndTime;
                       this.CheckedTimeSlot.push(newTimeSlot);
                     }

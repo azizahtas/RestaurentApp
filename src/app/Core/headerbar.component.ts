@@ -4,7 +4,19 @@ import {UserLogin, UserSignup} from "../User/user.modal";
 import {UserService} from "../User/user.service";
 @Component({
     selector : 'headerbar',
-    templateUrl : './headerbar.component.html'
+    templateUrl : './headerbar.component.html',
+  styles:[`
+.menuItems{
+float:left; 
+margin:-3px 0px 0px 10px; 
+font-size:20px; 
+padding:12px; 
+color:#6E778C;
+}
+.menuItemSelected{
+color: #5DCFF3;
+}
+`]
 })
 export class HeaderBarComponent{
 //assets/plugins/LoginSignUpForm/loginsignup.css
