@@ -440,7 +440,7 @@ export class BranchComponent implements OnInit{
                 data => {
                     if (data.success) {
                         var date = new Date(this.Booking.Date);
-                        this.messages.push({ type: 'success', title: 'Your Table is Booked!', message: 'Table Booked At Date : ' + date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear() + ' For ' + this.Booking.NoOfPersons + ' Persons!' });
+                        this.messages.push({ type: 'success', title: 'Your Table is Booked!', message: 'Table Booked At Date : ' + date.toLocaleDateString()+ ' For ' + this.Booking.NoOfPersons + ' Persons!' });
                     }
                     else {
                         this.messages.push({ type: 'danger', title: 'Try Booking Again! Sorry We Couldnt Book Your Table!', message: 'Error : ' + data.msg });

@@ -20,28 +20,36 @@
                         </div>
                       </div>
                       <div class="row">
+                        <div class="col-md-2">
+                          <label style="font-size: 20px; padding-top: 10px;">Search By Date :</label>
+                        </div>
                             <div class="col-md-2">
                                 <p-calendar [(ngModel)]="searchedBooking.Date" dateFormat="dd/mm/yy" [minDate]="minDate" [maxDate]="maxDate" [showIcon]="true" #Date="ngModel"
                                                             name="Date" [defaultDate]='today' [inputStyleClass]="['big']"></p-calendar>
                             </div>
+                        <div class="col-md-8"></div>
+                        </div>
+                      <div class="row" style="margin-top: 25px;">
+                        <div class="col-md-3">
+                          <input #search_name="ngModel" name="name" [(ngModel)]="searchedBooking.UserName" class="form-control big" type="text" placeholder="Name of User" (keyup)="CompositSearch()">
+                        </div>
                             <div class="col-md-3">
-                                <select  #Branch="ngModel" name="Branch" [(ngModel)]="searchedBooking._BranchId" class="form-control big" required>
+                                <select  #Branch="ngModel" name="Branch" [(ngModel)]="searchedBooking._BranchId" (change)="branchSelected()" class="form-control big" required>
                                     <option value="">Select A Branch</option>
-                                    <option *ngFor="let branch of Branches" [value]='branch._id' (click)="branchSelected(branch)">{{branch.Name}}</option>
+                                    <option *ngFor="let branch of Branches" [value]='branch._id' >{{branch.Name}}</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <select  #Table="ngModel" name="Table" [(ngModel)]="searchedBooking._TableId" class="form-control big" required>
+                                <select  #Table="ngModel" name="Table" [(ngModel)]="searchedBooking._TableId" class="form-control big" required (change)="CompositSearch()">
                                     <option value="">Select A Table</option>
                                     <option *ngFor="let table of selectedBranch.Tables" [value]='table._id' >Table Number : {{table.TNo}}</option>
                                 </select>
                             </div>
-                            <div class="col-md-1"></div>
                             <div class="col-md-1">
-                                <a class="btn btn-info btn-block big" ><i class="fa fa-refresh"></i></a>
+                                <button class="btn btn-info btn-block big" (click)="getAllBookings()"><i class="fa fa-refresh"></i></button>
                             </div>
                             <div class="col-md-1">
-                                <a class="btn btn-info btn-block big" ><i class="fa fa-search"></i></a>
+                                <button class="btn btn-info btn-block big" (click)="CompositSearch()"><i class="fa fa-search"></i></button>
                             </div>
 
                         </div>

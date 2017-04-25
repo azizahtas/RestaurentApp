@@ -20,10 +20,10 @@
                                 </div>
                             </div>
                             <div class="col-md-5" style="margin-bottom: 15px">
-                                <input #search_name="ngModel" name="name" [(ngModel)]="searchModal.Name" class="form-control big" type="text" placeholder="Search by Name !!">
+                                <input #search_name="ngModel" name="name" [(ngModel)]="searchModal.Name" class="form-control big" type="text" placeholder="Search by Name !!" (keyup)="CompositSearch()">
                             </div>
                             <div class="col-md-5" style="margin-bottom: 15px">
-                                <input #search_address="ngModel" name="address" [(ngModel)]="searchModal.Address" class="form-control big" type="text" placeholder="Search by City,State,Pin code one at a time !!">
+                                <input #search_address="ngModel" name="address" [(ngModel)]="searchModal.Address" class="form-control big" type="text" placeholder="Search by City,State,Pin code one at a time !!" (keyup)="CompositSearch()">
                             </div>
                             <div class="col-md-1" style="padding-left: 0; margin-bottom: 15px">
                                 <a class="btn btn-warning btn-block big" (click)="ClearSearch()">Clear</a>
@@ -43,7 +43,7 @@
         <div class="col-md-4" *ngFor="let branch of searchedBranches">
             <div class="caption-style">
                 <div>
-                    <img alt="300x200" data-src="" style="width: 350px; height: 300px;" [src]="branch.Img_Url">
+                    <img alt="300x200" data-src="" style="width: 350px; height: 300px; padding-bottom: 30px" [src]="branch.Img_Url">
                     <div class="caption">
                         <a *ngIf="_auth.isAdmin()" style="float: left; padding-left: 15px" class="btn btn-danger" data-target="#DeleteConfirm" data-toggle="modal"
                             (click)="deleteBranch(branch)"><i class="fa fa-times fa-2x"></i></a>
@@ -76,6 +76,11 @@
                                     <u>{{BranchView.Name}}</u>
                                 </h1>
                             </div>
+                          <div class="col-md-12">
+                            <h2>
+                              {{BranchView.Address}}
+                            </h2>
+                          </div>
                             <div *ngIf="BranchView.Tables.length>0" class="col-md-1">
                                 <h2>Tables</h2>
                             </div>
@@ -503,7 +508,7 @@
                         </div>
                         </div>
 
-                        <div class="modal fade" id="BookTable" tabindex="-1" role="dialog" aria-labelledby="BookTableModalLabel" aria-hidden="true"
+                        <div *ngIf="_auth.isAdmin() || (_auth.isManager() && _auth.getBranchId() == BranchView._id)" class="modal fade" id="BookTable" tabindex="-1" role="dialog" aria-labelledby="BookTableModalLabel" aria-hidden="true"
                             style="display: none">
                             <div class="modal-dialog">
                                 <div class="modal-content">

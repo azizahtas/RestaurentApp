@@ -35,24 +35,14 @@ export class Order {
 }
 
 export class BookingSearchModal{
-    Date : Date;
+    Date : string;
     _BranchId : string;
     _TableId : string;
-    _UserId : string;
-    _TimeSlotId : string;
-    FName : string;
-    LName : string;
-    Canceled : boolean;
-    Arrived : boolean;
+    UserName : string;
     constructor(){
-        this._UserId = "";
+        this.UserName = "";
         this._BranchId = "";
         this._TableId = "";
-        this.Date = new Date();
-        this._TimeSlotId = "";
-        this.FName = "";
-        this.LName = "";
-        this.Canceled = false;
-        this.Arrived = false;
+        this.Date = "";
     }
 }

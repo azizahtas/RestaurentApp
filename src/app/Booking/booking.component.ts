@@ -67,8 +67,8 @@ export class BookingComponent {
         }
     }
 
-    public branchSelected(branch : Branch){
-     /* let selectedBranch : Branch = new Branch();
+    public branchSelected(){
+     let selectedBranch : Branch = new Branch();
       let id = this.searchedBooking._BranchId;
       _(this.Branches).forEach(function (b:Branch) {
         if(b._id == id){
@@ -76,9 +76,6 @@ export class BookingComponent {
         }
       });
         this.selectedBranch = selectedBranch;
-      console.log(id);*/
-     this.selectedBranch = branch;
-      console.log(this.selectedBranch);
     }
     selectBooking(selected : Booking, i : number){
       this.selectedBooking = selected;
@@ -112,47 +109,54 @@ export class BookingComponent {
       });
       this.searchedBookings = openBookings;
     }
-  /*
+
  CompositSearch(){
-    this.view_Details = false;
     let exp = this.generateExpression();
     if(exp!="") {
-      let SrchItms:MenuItem[] = [];
-      _(this.menuItems).forEach(function (val:MenuItem) {
+      let SearchBooking:Booking[] = [];
+      let searchedDate = this.searchedBooking.Date;
+      _(this.Bookings).forEach(function (val:Booking) {
         if (eval(exp)) {
-          SrchItms.push(val);
+          SearchBooking.push(val);
+        }
+        else if(searchedDate!=""){
+          let date1 = new Date(searchedDate).toLocaleDateString();
+          let date2 = new Date(val.Date).toLocaleDateString();
+          console.log(date1 + " " + date2);
+          if(date1 == date2){
+            SearchBooking.push(val);
+          }
         }
       });
-      this.searchedMenuItems = [];
-      this.searchedMenuItems = SrchItms;
-      console.log("exp is "+exp);
-      //this.setPages(this.searchdItems);
+      this.searchedBookings = [];
+      this.searchedBookings  = SearchBooking;
     }
     else if(exp==""){
-      this.getAllMenuItems();
+      this.showAll();
     }
   }
+
   generateExpression():string{
     let exp = "";
-    if(this.searchedBooking.Date.toDateString()!=""){
-
-     let d = new Date(this.searchedBooking.Date);
-      exp += patt+".test(val.Name)&&";
+    if(this.searchedBooking.UserName!=""){
+      let patt = new RegExp(this.searchedBooking.UserName,'i');
+      exp += patt+".test(val._UserName)&&";
     }
-    if(this.searchModal.Category!=""){
-      exp += "'"+this.searchModal.Category+"'==val.Category&&"
+    if(this.searchedBooking.Date!=""){
+      let date = new Date(this.searchedBooking.Date).toLocaleDateString();
+      exp += date+"==new Date(val.Date).toLocaleDateString()&&";
     }
-    if(this.searchModal.Type!=""){
-      exp += "'"+this.searchModal.Type+"'==val.Type&&"
+    if(this.searchedBooking._BranchId!=""){
+      exp += "'"+this.searchedBooking._BranchId+"'==val._BranchId&&"
     }
-    if(this.searchModal.Price!=0){
-      exp += "'val.FPrice<="+this.searchModal.Price+"'&&"
+    if(this.searchedBooking._TableId!=""){
+      exp += "'"+this.searchedBooking._TableId+"'==val._TableId&&"
     }
-
     exp = exp.substr(0,exp.length-2);
+    console.log(exp);
     return exp;
+
   }
-  */
     showAll(){
       this.searchedBookings = this.Bookings;
     }

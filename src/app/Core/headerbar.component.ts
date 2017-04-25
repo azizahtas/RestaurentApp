@@ -61,6 +61,7 @@ export class HeaderBarComponent{
             )
     }
     public Signup(){
+      this.CheckEmail(this.userSignup.local.email);
         var newuser = new UserSignup();
         newuser.local.email = this.userSignup.local.email;
         newuser.local.password = this.userSignup.local.password;
@@ -68,26 +69,26 @@ export class HeaderBarComponent{
         newuser.otherDetails.lname= this.userSignup.otherDetails.lname;
         newuser.otherDetails.phone= this.userSignup.otherDetails.phone;
         this._user.signup(newuser)
-            .subscribe(
-                data => {
-                    this.serverOffline = false;
-                    if(data.success){
-                        this.incorrectSignup = false;
-                        var token = data.data;
-                        localStorage.setItem('token', token);
-                      this.loginSuccess = true;
-                    }
-                    else if(!data.success){
-                        this.incorrectSignup = true;
-                      this.loginSuccess = false;
-                    }
-                },
-                err => {
-                    this.serverOffline = true;
-                },
-                () => {}
-            )
-    }
+          .subscribe(
+            data => {
+              this.serverOffline = false;
+              if(data.success){
+                this.incorrectSignup = false;
+                var token = data.data;
+                localStorage.setItem('token', token);
+                this.loginSuccess = true;
+              }
+              else if(!data.success){
+                this.incorrectSignup = true;
+                this.loginSuccess = false;
+              }
+            },
+            err => {
+              this.serverOffline = true;
+            },
+            () => {}
+          )
+      }
     public CheckEmail(email : String){
         this.checking_Email = true;
         this.serverOffline = false;

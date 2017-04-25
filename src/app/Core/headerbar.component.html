@@ -1,5 +1,11 @@
+<style>
+  .user_admin ul {
+    z-index: 1200;
+  }
+</style>
 <div class="header_bar ">
     <!--\\\\\\\ header Start \\\\\\-->
+
     <div class="brand">
         <!--\\\\\\\ brand Start \\\\\\-->
         <a href="Dashboard" style="text-decoration: none" >
@@ -146,7 +152,7 @@
                                 <div class="form-group" [ngClass]="{'has-error': !email.valid && !email.pristine && email.touched, 'has-success':email.valid}">
                                     <label class="col-sm-3 control-label big">Email Id </label>
                                     <div class="col-sm-8">
-                                        <input [(ngModel)]="user.email" name="email" #email="ngModel" type="email" placeholder="Enter Your Email Id" class="form-control big" required minlength="5" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+                                        <input [(ngModel)]="user.email" name="email" style="text-transform: lowercase;" #email="ngModel" type="email" placeholder="Enter Your Email Id" class="form-control big" required minlength="5" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
                                     </div>
                                     <div class="col-md-1">
                                         <p class="help-block"><i class="fa" [ngClass]="{'fa-check': email.valid && !email.pristine , 'fa-times':!email.valid && !email.pristine}"></i></p>
@@ -201,10 +207,10 @@
                             <div class="form-group" [ngClass]="{'has-error': !Semail.valid && !Semail.pristine && Semail.touched || checking_Email_Error, 'has-success':Semail.valid && !checking_Email_Error}">
                                 <label class="col-sm-3 control-label big">Email Id</label>
                                 <div class="col-sm-8">
-                                    <input #Semail="ngModel" name="Semail" (keyup)="CheckEmail($event.target.value)" [(ngModel)]="userSignup.local.email" type="text" placeholder="Enter Your Email" class="form-control big" required minlength="5">
+                                    <input #Semail="ngModel" name="Semail" (keyup)="CheckEmail($event.target.value)" style="text-transform: lowercase;" [(ngModel)]="userSignup.local.email" type="email" placeholder="Enter Your Email" class="form-control big" required minlength="5">
                                 </div>
                                 <div class="col-md-1">
-                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Semail.valid && !Semail.pristine && !checking_Email, 'fa-times':!Semail.valid && !Semail.pristine}"></i></p>
+                                    <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Semail.valid && !Semail.pristine && !checking_Email_Error , 'fa-times':!Semail.valid && !Semail.pristine}"></i></p>
                                     <p class="help-block"><i class="fa" [ngClass]="{'fa-spinner fa-spin': checking_Email, 'fa-times fa-spin':checking_Email_Error}"></i></p>
                                 </div>
                                 <div class="col-sm-12">
@@ -280,7 +286,7 @@
                             <div class="form-group" [ngClass]="{'has-error': !Phone.valid && !LName.pristine && LName.touched, 'has-success':Phone.valid}">
                                 <label class="col-sm-3 control-label big">Mobile</label>
                                 <div class="col-sm-8">
-                                    <input #Phone="ngModel" name="Phone" [(ngModel)]="userSignup.otherDetails.phone" type="number" placeholder="Enter Mobile Number" class="form-control big" required>
+                                    <input #Phone="ngModel" name="Phone" [(ngModel)]="userSignup.otherDetails.phone" type="number" placeholder="Enter Mobile Number" class="form-control big" maxlength="10" required>
                                 </div>
                                 <div class="col-md-1">
                                     <p class="help-block"><i class="fa" [ngClass]="{'fa-check': Phone.valid && !Phone.pristine , 'fa-times':!Phone.valid && !Phone.pristine}"></i></p>
