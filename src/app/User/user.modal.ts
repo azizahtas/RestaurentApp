@@ -20,7 +20,7 @@ export class UserLoginFacebook{
      this.id = "";
      this.email = "";
      this.token = "";
-     this.name = ""; 
+     this.name = "";
  }
 }
 export class UserLoginTwitter{
@@ -32,7 +32,7 @@ export class UserLoginTwitter{
      this.id = "";
      this.email = "";
      this.token = "";
-     this.name = ""; 
+     this.name = "";
  }
 }
 export class UserLoginGoogle{
@@ -44,7 +44,7 @@ export class UserLoginGoogle{
      this.id = "";
      this.email = "";
      this.token = "";
-     this.name = ""; 
+     this.name = "";
  }
 }
 
@@ -107,5 +107,16 @@ export class UserSearchModal{
         this.FName = "";
         this.LName = "";
     }
+}
+
+export class PasswordResetModal{
+  email : string;
+  key : string;
+  newPassword : string;
+  constructor(){
+    this.email = "";
+    this.key = "";
+    this.newPassword = "";
+  }
 }
 

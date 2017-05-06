@@ -3,5 +3,5 @@ export const Settings = {
     serverHost : 'restaurentapiserver.herokuapp.com'
     //serverHost : 'restaurentapi.herokuapp.com'
     //serverPort : '5555',
-    //serverHost : '192.168.0.106'
+    //serverHost : 'localhost'
 };

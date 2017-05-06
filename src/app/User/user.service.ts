@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import "../rxjs.operators";
 import {Http} from "@angular/http";
 import {Settings} from "../settings";
-import {UserLogin, UserSignup, OtherDetails} from "./user.modal";
+import {UserLogin, UserSignup, OtherDetails, PasswordResetModal} from "./user.modal";
 import {Observable} from "rxjs/Observable";
 import {GeneralResponseModal} from "../Shared/GeneralResponseModal";
 import {AuthHttp} from "angular2-jwt";
@@ -41,6 +41,19 @@ export class UserService {
          return this._authHttp.put(this._baseUrl + "/"+userId, newUser)
             .map(res => res.json())
     }
+
+    requestKey(resetPass:PasswordResetModal): Observable<GeneralResponseModal> {
+         return this._http.post(this._baseUrl + "/forgotPassword",resetPass)
+            .map(res => res.json())
+    }
+  checkKey(resetPass:PasswordResetModal): Observable<GeneralResponseModal> {
+    return this._http.post(this._baseUrl + "/checkKey",resetPass)
+      .map(res => res.json())
+  }
+  resetPassword(resetPass:PasswordResetModal): Observable<GeneralResponseModal> {
+    return this._http.post(this._baseUrl + "/resetPassword",resetPass)
+      .map(res => res.json())
+  }
 
 
 }

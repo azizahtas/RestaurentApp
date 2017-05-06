@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {Auth} from "../Auth/auth.service";
-import {UserLogin, UserSignup} from "../User/user.modal";
+import {UserLogin, UserSignup, PasswordResetModal} from "../User/user.modal";
 import {UserService} from "../User/user.service";
 @Component({
     selector : 'headerbar',
@@ -24,6 +24,7 @@ export class HeaderBarComponent{
 
     user : UserLogin = new UserLogin();
     userSignup : UserSignup = new UserSignup();
+    forgotPassModal : PasswordResetModal = new PasswordResetModal();
     temp :string = "";
 
     incorrect : boolean = false;
@@ -31,9 +32,16 @@ export class HeaderBarComponent{
     serverOffline : boolean = false;
     active: boolean = false;
     loginSuccess : boolean = false;
+    forgotPass : boolean = false;
+    key : boolean = false;
+    newPass : boolean = false;
+  passwordResetSuccess : boolean = false;
 
     checking_Email : boolean = false;
     checking_Email_Error : boolean = false;
+
+    passwordResetMessage : string = "";
+
 
     public Login(){
         var newUser = new UserLogin();
@@ -99,6 +107,61 @@ export class HeaderBarComponent{
                 },
                 err =>{this.serverOffline = true;},()=>{this.checking_Email = false;}
             )
+    }
+    public toggleForgotPassword(){
+      this.forgotPass = !this.forgotPass;
+    }
+    public forgotPassword(){
+      this._user.requestKey(this.forgotPassModal)
+        .subscribe(
+          data =>{
+            if(data.success){
+              this.passwordResetMessage = data.msg;
+              this.forgotPass = false;
+              this.key = true;
+              this.newPass = false;
+            }
+            else{
+              this.passwordResetMessage = data.msg;
+            }
+          },
+          err =>{this.serverOffline = true; console.log(err)},()=>{}
+        )
+    }
+    public verifyKey(){
+      this._user.checkKey(this.forgotPassModal)
+        .subscribe(
+          data =>{
+            if(data.success){
+              this.passwordResetMessage = "Enter New Password";
+              this.forgotPass = false;
+              this.key = false;
+              this.newPass = true;
+            }
+            else{
+              this.passwordResetMessage = data.msg;
+            }
+          },
+          err =>{this.serverOffline = true; console.log(err)},()=>{}
+        )
+    }
+     public changePassword(){
+      this._user.resetPassword(this.forgotPassModal)
+        .subscribe(
+          data =>{
+            if(data.success){
+              this.passwordResetMessage = "";
+              this.forgotPass = false;
+              this.key = false;
+              this.newPass = false;
+              this.passwordResetSuccess = true;
+            }
+            else{
+              this.passwordResetMessage = data.msg;
+            }
+          },
+          err =>{this.serverOffline = true; console.log(err)},()=>{}
+        )
     }
 
     public logout(){
