@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {Auth} from "../Auth/auth.service";
 import {UserLogin, UserSignup, PasswordResetModal} from "../User/user.modal";
 import {UserService} from "../User/user.service";
+declare const gapi: any;
 @Component({
     selector : 'headerbar',
     templateUrl : './headerbar.component.html',
@@ -19,8 +20,11 @@ color: #5DCFF3;
 `]
 })
 export class HeaderBarComponent{
+
 //assets/plugins/LoginSignUpForm/loginsignup.css
-    constructor(public _auth:Auth, public _user:UserService){}
+    constructor(public _auth:Auth, public _user:UserService){};
+  public auth2:any;
+  private clientId:string = '103506144227-7kqf32ajt6dlf1mecho39tj02nu8d1dc.apps.googleusercontent.com';
 
     user : UserLogin = new UserLogin();
     userSignup : UserSignup = new UserSignup();
@@ -42,6 +46,9 @@ export class HeaderBarComponent{
 
     passwordResetMessage : string = "";
 
+  ngAfterViewInit(){
+    this.googleInit();
+  }
 
     public Login(){
         var newUser = new UserLogin();
@@ -172,5 +179,38 @@ export class HeaderBarComponent{
     public ToggleActive(){
         this.active = !this.active;
     }
+
+
+  public googleInit() {
+    let that = this;
+    gapi.load('auth2', function () {
+      that.auth2 = gapi.auth2.init({
+        client_id: that.clientId,
+        cookiepolicy: 'single_host_origin',
+        scope: 'profile email'
+      });
+      that.attachSignin(document.getElementById('googleBtn'));
+    });
+  }
+  public attachSignin(element) {
+    let that = this;
+    this.auth2.attachClickHandler(element, {},
+      function (googleUser) {
+
+        let profile = googleUser.getBasicProfile();
+        console.log('Token || ' + googleUser.getAuthResponse().id_token);
+        console.log('ID: ' + profile.getId());
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail());
+        //YOUR CODE HERE
+
+
+      }, function (error) {
+        alert(JSON.stringify(error, undefined, 2));
+      });
+  }
+
+
 
 }

@@ -274,13 +274,27 @@
                         <button class="btn btn-success" (click)="changePassword()">Reset Password</button>
                       </div>
                       </form>
+
                     <div class="alert alert-danger" *ngIf="forgotPass && !loginSuccess || key || newPass">
                           <h2>{{passwordResetMessage}}</h2>
                     </div>
                       <div class="alert alert-success" *ngIf=" !loginSuccess && (!key || !newPass || !forgotPass) && passwordResetSuccess">
                         <h2>Password Was Reset Successfully!</h2>
                       </div>
+                      <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4"><button class="btn btn-info btn-block" disabled>OR</button></div>
+                        <div class="col-md-4"></div>
+                      </div><br>
+                      <div class="row">
+                        <div class="col-md-4"><button id="googleBtn" class="btn btn-danger btn-block"><span class="fa fa-google-plus"></span> Google</button></div>
+                        <div class="col-md-4"><button id="facebook" class="btn btn-danger btn-block"><span class="fa fa-google-plus"></span> Facebook</button></div>
+                        <div class="col-md-4"><button id="twitter" class="btn btn-danger btn-block"><span class="fa fa-google-plus"></span> Twitter</button></div>
+                      </div>
+
                     </div>
+
+
                     <div id="signup_form" class="tab-pane fade">
                         <form #sf="ngForm" class="form-horizontal row-border" novalidate>
                             <div class="form-group" [ngClass]="{'has-error': !Semail.valid && !Semail.pristine && Semail.touched || checking_Email_Error, 'has-success':Semail.valid && !checking_Email_Error}">
