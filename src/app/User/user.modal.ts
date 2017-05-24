@@ -40,11 +40,13 @@ export class UserLoginGoogle{
      email : string;
      token : string;
      name : string;
+     image_url : string;
  constructor(){
      this.id = "";
      this.email = "";
      this.token = "";
      this.name = "";
+     this.image_url = "";
  }
 }
 
@@ -120,3 +122,21 @@ export class PasswordResetModal{
   }
 }
 
+export class GitAuth{
+  scopes : string[];
+  note : string;
+  note_url : string;
+  client_id : string;
+  client_secret : string;
+  fingerprint : string;
+
+
+  constructor() {
+      this.scopes = ["public_profile"];
+      this.note = "For Restaurent Booking";
+      this.note_url = "http://localhost:4200";
+      this.client_id = "";
+      this.client_secret = "";
+      this.fingerprint = "";
+      }
+}

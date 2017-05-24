@@ -14,10 +14,10 @@
     </div>
     <!--\\\\\\\ brand end \\\\\\-->
     <div class="header_top_bar" style="background-color: #334559;">
-        <a href="javascript:void(0);" class="menutoggle"> <i class="fa fa-bars"></i> </a>
-        <a class="menuItems" routerLinkActive="menuItemSelected" [routerLink]="['Dashboard']"> <i class="fa fa-home"></i> </a>
-        <a class="menuItems" routerLinkActive="menuItemSelected" [routerLink]="['Item']"> <i class="fa fa-tag"></i> </a>
-        <a class="menuItems" routerLinkActive="menuItemSelected" [routerLink]="['Branch']"> <i class="fa fa-book"></i> </a>
+        <a href="javascript:void(0);" class="menutoggle" pTooltip="Menu" tooltipPosition="bottom"> <i class="fa fa-bars"></i> </a>
+        <a class="menuItems" routerLinkActive="menuItemSelected" [routerLink]="['Dashboard']" pTooltip="Home" tooltipPosition="bottom"> <i class="fa fa-home"></i> </a>
+        <a class="menuItems" routerLinkActive="menuItemSelected" [routerLink]="['Item']" pTooltip="Menu Item" tooltipPosition="bottom"> <i class="fa fa-tag"></i> </a>
+        <a class="menuItems" routerLinkActive="menuItemSelected" [routerLink]="['Branch']" pTooltip="Booking" tooltipPosition="bottom"> <i class="fa fa-book"></i> </a>
         <!--\\\\\\\ header top bar start \\\\\\
         <a href="javascript:void(0);" class="menutoggle"> <i class="fa fa-bars"></i> </a>
         <div class="top_left">
@@ -105,12 +105,12 @@
                 </div>
             </div>
             -->
-            <div class="user_admin dropdown" *ngIf="!_auth.loggedIn()">
+            <div class="user_admin dropdown" *ngIf="!_auth.loggedIn()" pTooltip="User" tooltipPosition="bottom">
                 <a href="" data-toggle="modal" data-target="#LoginSignup">
                 <img src="../assets/images/default-profile.png" width="50px" height="50px"/>
                 </a>
             </div>
-            <div class="user_admin dropdown" *ngIf="_auth.loggedIn()">
+            <div class="user_admin dropdown" *ngIf="_auth.loggedIn()" pTooltip="User" tooltipPosition="bottom">
                 <a href="javascript:void(0);" data-toggle="dropdown">
                 <img src="../assets/images/default-profile.png" width="50px" height="50px"/>
               <!--  <span class="user_adminname"></span> -->
@@ -287,9 +287,10 @@
                         <div class="col-md-4"></div>
                       </div><br>
                       <div class="row">
-                        <div class="col-md-4"><button id="googleBtn" class="btn btn-danger btn-block"><span class="fa fa-google-plus"></span> Google</button></div>
-                        <div class="col-md-4"><button id="facebook" class="btn btn-danger btn-block"><span class="fa fa-google-plus"></span> Facebook</button></div>
-                        <div class="col-md-4"><button id="twitter" class="btn btn-danger btn-block"><span class="fa fa-google-plus"></span> Twitter</button></div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5"><button id="googleBtn" class="btn btn-danger btn-block"><span class="fa fa-google-plus"></span> Google</button></div>
+                        <div class="col-md-5"><button id="facebook" class="btn btn-info btn-block" (click)="onFacebookLoginClick()"><i class="fa fa-facebook fa-fw"></i>Facebook</button></div>
+                        <div class="col-md-1"></div>
                       </div>
 
                     </div>

@@ -455,6 +455,12 @@ export class BranchComponent implements OnInit{
     }
     public checkBookings() {
         this.Booking._TimeSlotId = "";
+
+      this.getAllNonCanceledBookings();
+      for(var j=0;j<this.NonCanceledBookings.length;j++) {
+        console.log(this.NonCanceledBookings[j].Date + '-->' +this.NonCanceledBookings[j].TNo + '-->' +  this.getBranchName(this.NonCanceledBookings[j]._BranchId) + '-->'
+        + this.getTimeSlotName(this.NonCanceledBookings[j]._TimeSlotId))
+      }
         for(var i=0; i<this.CheckedTimeSlot.length;i++){
             for(var j=0;j<this.NonCanceledBookings.length;j++){
                 if(new Date(this.NonCanceledBookings[j].Date).valueOf() == new Date(this.Booking.Date).valueOf()
@@ -464,6 +470,7 @@ export class BranchComponent implements OnInit{
                     {
                       this.CheckedTimeSlot[i].Disabled = true;
                     }
+                    else this.CheckedTimeSlot[i].Disabled = false;
             }
         }
     }
@@ -562,6 +569,24 @@ export class BranchComponent implements OnInit{
         }
     }
 
+  getBranchName(branchId:String) : String {
+    var Name : String = "";
+    _(this.Branches).forEach(function (branch:Branch) {
+      if(branch._id == branchId){
+        Name = branch.Name;
+      }
+    });
+    return Name;
+  }
+  getTimeSlotName(timeslotId:String) : String {
+    var Name : String = "";
+    _(this.TimeSlots).forEach(function (timeslot:TimeSlot) {
+      if(timeslot._id == timeslotId){
+        Name = timeslot.StartTime + " - " + timeslot.EndTime;
+      }
+    });
+    return Name;
+  }
     allSlotsBooked():boolean{
         var booked = 0;
         for(var i=0; i<this.CheckedTimeSlot.length;i++){

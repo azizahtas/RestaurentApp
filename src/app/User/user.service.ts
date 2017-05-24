@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import "../rxjs.operators";
 import {Http} from "@angular/http";
 import {Settings} from "../settings";
-import {UserLogin, UserSignup, OtherDetails, PasswordResetModal} from "./user.modal";
+import {UserLogin, UserSignup, OtherDetails, PasswordResetModal, UserLoginGoogle, GitAuth} from "./user.modal";
 import {Observable} from "rxjs/Observable";
 import {GeneralResponseModal} from "../Shared/GeneralResponseModal";
 import {AuthHttp} from "angular2-jwt";
@@ -20,6 +20,16 @@ export class UserService {
     signup(user : UserSignup): Observable<GeneralResponseModal>{
         return this._http.post(this._baseUrl+"/signup",user)
             .map(res => res.json())
+    }
+
+    google(user : UserLoginGoogle): Observable<GeneralResponseModal>{
+        return this._http.post(this._baseUrl+"/auth/google",user)
+            .map(res => res.json())
+    }
+
+    github(user : GitAuth): Observable<any>{
+      return this._http.post("https://api.github.com/authorizations",user)
+        .map(res => res.json())
     }
 
     checkUser(email : String): Observable<GeneralResponseModal>{

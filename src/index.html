@@ -17,18 +17,26 @@
     <link href="assets/css/admin.css" rel="stylesheet" type="text/css" />
     <link href="assets/plugins/ImageCaptionHover/imageCaption.css" rel="stylesheet" type="text/css" />
   <script src="https://apis.google.com/js/platform.js"></script>
+  <script src="//connect.facebook.net/en_US/sdk.js"></script>
   <script>
-    function onSignIn(googleUser) {
-      console.log('Dude');
-      var profile = googleUser.getBasicProfile();
-      console.log('Dude2');
-      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-      console.log('Name: ' + profile.getName());
-      console.log('Image URL: ' + profile.getImageUrl());
-      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    }
-  </script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1889101234695879',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v2.8'
+      });
+      FB.AppEvents.logPageView();
+    };
 
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
 
   <style>
         .big

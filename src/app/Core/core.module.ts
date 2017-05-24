@@ -5,10 +5,11 @@ import {LeftNavComponent} from "./leftnav.component";
 import {RouterModule} from "@angular/router";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
+import {TooltipModule} from 'primeng/primeng';
 @NgModule({
-    imports : [BrowserModule,RouterModule,HttpModule,FormsModule,ReactiveFormsModule],
+    imports : [BrowserModule,RouterModule,HttpModule,FormsModule,ReactiveFormsModule,TooltipModule],
     declarations : [HeaderBarComponent,LeftNavComponent],
-    exports : [BrowserModule,FormsModule,HttpModule,ReactiveFormsModule,RouterModule,HeaderBarComponent,LeftNavComponent]
+    exports : [BrowserModule,FormsModule,HttpModule,ReactiveFormsModule,TooltipModule,RouterModule,HeaderBarComponent,LeftNavComponent]
 })
 export class CoreModule{
 

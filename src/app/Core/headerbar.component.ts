@@ -1,8 +1,10 @@
 import {Component} from "@angular/core";
 import {Auth} from "../Auth/auth.service";
-import {UserLogin, UserSignup, PasswordResetModal} from "../User/user.modal";
+import {UserLogin, UserSignup, PasswordResetModal, UserLoginGoogle, GitAuth} from "../User/user.modal";
 import {UserService} from "../User/user.service";
 declare const gapi: any;
+declare const FB:any;
+
 @Component({
     selector : 'headerbar',
     templateUrl : './headerbar.component.html',
@@ -24,11 +26,14 @@ export class HeaderBarComponent{
 //assets/plugins/LoginSignUpForm/loginsignup.css
     constructor(public _auth:Auth, public _user:UserService){};
   public auth2:any;
-  private clientId:string = '103506144227-7kqf32ajt6dlf1mecho39tj02nu8d1dc.apps.googleusercontent.com';
+  private googleClientId:string = '103506144227-7kqf32ajt6dlf1mecho39tj02nu8d1dc.apps.googleusercontent.com';
+  private gitClientId:string = 'fdd0e5fb8a6f39c76a83';
+  private gitClientSecret:string = '1e5eacf656727af6e593f89e7943653d3c5212ca';
 
     user : UserLogin = new UserLogin();
     userSignup : UserSignup = new UserSignup();
     forgotPassModal : PasswordResetModal = new PasswordResetModal();
+    googleLogin : UserLoginGoogle = new UserLoginGoogle();
     temp :string = "";
 
     incorrect : boolean = false;
@@ -46,8 +51,18 @@ export class HeaderBarComponent{
 
     passwordResetMessage : string = "";
 
+  token: any;
+  loged: boolean = false;
+  usr = { name: 'Hello' };
+
   ngAfterViewInit(){
     this.googleInit();
+    this.facebookInit();
+  }
+  ngOnInit(){
+    FB.getLoginStatus(response => {
+      this.facebookStatusChangeCallback(response);
+    });
   }
 
     public Login(){
@@ -180,37 +195,89 @@ export class HeaderBarComponent{
         this.active = !this.active;
     }
 
+  public facebookInit(){
+    FB.init({
+      appId      : '1889101234695879',
+      cookie     : false,  // enable cookies to allow the server to access
+      // the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.5' // use graph api version 2.5
+    });
+  }
+
+  public onFacebookLoginClick(){
+    FB.login((result: any) => {
+      this.loged = true;
+      this.token = result;
+    }, { scope: 'user_friends' });
+  }
+  facebookStatusChangeCallback(resp) {
+    if (resp.status === 'connected') {
+      // connect here with your server for facebook login by passing access token given by facebook
+      console.log("Authorized");
+      console.log(resp)
+    }else if (resp.status === 'not_authorized') {
+      console.log("Not Authorized")
+    }else {
+      console.log(resp)
+    }
+  };
 
   public googleInit() {
     let that = this;
     gapi.load('auth2', function () {
       that.auth2 = gapi.auth2.init({
-        client_id: that.clientId,
+        client_id: that.googleClientId,
         cookiepolicy: 'single_host_origin',
         scope: 'profile email'
       });
-      that.attachSignin(document.getElementById('googleBtn'));
+      that.attachGoogleSignin(document.getElementById('googleBtn'));
     });
   }
-  public attachSignin(element) {
+  public attachGoogleSignin(element) {
     let that = this;
+    let newuser = this.googleLogin;
     this.auth2.attachClickHandler(element, {},
       function (googleUser) {
-
         let profile = googleUser.getBasicProfile();
-        console.log('Token || ' + googleUser.getAuthResponse().id_token);
-        console.log('ID: ' + profile.getId());
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail());
-        //YOUR CODE HERE
+        newuser.token = googleUser.getAuthResponse().id_token;
+        newuser.id = profile.getId();
+        newuser.name = profile.getName();
+        newuser.image_url = profile.getImageUrl();
+        newuser.email = profile.getEmail();
 
-
+       that.addGoogleUser(newuser)
       }, function (error) {
         alert(JSON.stringify(error, undefined, 2));
       });
   }
 
+  public addGoogleUser(newuser) {
+    let that = this;
+    that._user.google(newuser)
+      .subscribe(
+        data => {
+          that.serverOffline = false;
+          if(data.success){
+            that.incorrect = false;
+            var token = data.data;
+            that.addToLocalStorage(token);
+            that.loginSuccess = true;
+          }
+          else if(!data.success){
+            that.incorrect = true;
+            that.loginSuccess = false;
+          }
+        },
+        err => {
+          that.serverOffline = true;
+        },
+        () => {}
+      )
+  }
 
+public addToLocalStorage(token){
+  localStorage.setItem('token', token);
+}
 
 }
