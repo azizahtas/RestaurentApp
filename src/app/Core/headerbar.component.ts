@@ -1,9 +1,9 @@
 import {Component} from "@angular/core";
 import {Auth} from "../Auth/auth.service";
-import {UserLogin, UserSignup, PasswordResetModal, UserLoginGoogle, GitAuth} from "../User/user.modal";
+import {UserLogin, UserSignup, PasswordResetModal, UserLoginGoogle} from "../User/user.modal";
 import {UserService} from "../User/user.service";
 declare const gapi: any;
-declare const FB:any;
+//declare const FB:any;
 
 @Component({
     selector : 'headerbar',
@@ -27,8 +27,6 @@ export class HeaderBarComponent{
     constructor(public _auth:Auth, public _user:UserService){};
   public auth2:any;
   private googleClientId:string = '103506144227-7kqf32ajt6dlf1mecho39tj02nu8d1dc.apps.googleusercontent.com';
-  private gitClientId:string = 'fdd0e5fb8a6f39c76a83';
-  private gitClientSecret:string = '1e5eacf656727af6e593f89e7943653d3c5212ca';
 
     user : UserLogin = new UserLogin();
     userSignup : UserSignup = new UserSignup();
@@ -51,18 +49,14 @@ export class HeaderBarComponent{
 
     passwordResetMessage : string = "";
 
-  token: any;
-  loged: boolean = false;
-  usr = { name: 'Hello' };
-
   ngAfterViewInit(){
     this.googleInit();
-    this.facebookInit();
+   // this.facebookInit();
   }
   ngOnInit(){
-    FB.getLoginStatus(response => {
+  /*  FB.getLoginStatus(response => {
       this.facebookStatusChangeCallback(response);
-    });
+    });*/
   }
 
     public Login(){
@@ -194,7 +188,7 @@ export class HeaderBarComponent{
     public ToggleActive(){
         this.active = !this.active;
     }
-
+/*
   public facebookInit(){
     FB.init({
       appId      : '1889101234695879',
@@ -221,7 +215,7 @@ export class HeaderBarComponent{
     }else {
       console.log(resp)
     }
-  };
+  };*/
 
   public googleInit() {
     let that = this;

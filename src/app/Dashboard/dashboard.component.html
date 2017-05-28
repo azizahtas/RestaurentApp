@@ -4,12 +4,21 @@
     </div>
 </div>
 <div class="container clear_both padding_fix">
-    <div class="row">
-        <div class="col-md-12">
-            <portlet title="Welcome">
-                <h1>Home Screen</h1>
-            </portlet>
-        </div>
+  <div class="row">
+    <div class="col-md-12">
+      <carousel [interval]="NextPhotoInterval" [noWrap]="noLoopSlides">
+        <slide *ngFor="let slidez of slides,let index=index"
+               [active]="slidez.active">
+          <img [src]="slidez.image" style="margin:auto;" width="100%" height="600px">
+
+          <div class="carousel-caption">
+            <h3 style="background-color: transparent;color: white;">{{slidez.text}}</h3>
+            <p  style="background-color: transparent;color: white;">{{slidez.text}}</p>
+          </div>
+        </slide>
+      </carousel>
     </div>
+  </div>
+
 
 </div>

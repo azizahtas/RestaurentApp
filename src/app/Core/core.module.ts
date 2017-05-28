@@ -6,6 +6,8 @@ import {RouterModule} from "@angular/router";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {TooltipModule} from 'primeng/primeng';
+
+
 @NgModule({
     imports : [BrowserModule,RouterModule,HttpModule,FormsModule,ReactiveFormsModule,TooltipModule],
     declarations : [HeaderBarComponent,LeftNavComponent],
