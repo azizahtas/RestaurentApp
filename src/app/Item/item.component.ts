@@ -34,11 +34,13 @@ export class ItemComponent {
      menuItemDelete : MenuItem;
      menuItemView : MenuItem;
 
-    menuItems : MenuItem[];
-    searchedMenuItems : MenuItem[];
+    menuItems : MenuItem[] = [];
+    searchedMenuItems : MenuItem[] = [];
     categories : Category[];
     messages : Message[];
     searchModal:MenuItemSearchModel;
+    pagedItems : MenuItem[] = [];
+    pageSize : number = 18;
 
     checking_Name : boolean = false;
     checking_Name_Error : boolean = false;
@@ -195,7 +197,7 @@ export class ItemComponent {
             this.searchedMenuItems = [];
             this.searchedMenuItems = SrchItms;
             console.log("exp is "+exp);
-            //this.setPages(this.searchdItems);
+            this.setPages(this.searchedMenuItems);
         }
         else if(exp==""){
             this.getAllMenuItems();
@@ -229,6 +231,7 @@ export class ItemComponent {
                     if(data.success) {
                         this.menuItems = data.data;
                         this.searchedMenuItems = this.menuItems;
+                        this.pagedItems = this.searchedMenuItems.slice(0, this.pageSize);
                     }
                 },
                 err=>{},
@@ -251,4 +254,12 @@ export class ItemComponent {
             );
     }
 
+  onPageChanged(page){
+    var offset = (page - 1) * this.pageSize;
+    //this.pagedItems = _.take(_.rest(this.items,offset),this.pageSize);
+    this.pagedItems = this.searchedMenuItems.slice(offset, offset+this.pageSize);
+  }
+  setPages(items:MenuItem[]){
+    this.pagedItems = _.take(items, this.pageSize);
+  }
 }

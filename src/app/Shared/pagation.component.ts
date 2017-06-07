@@ -4,12 +4,12 @@ import {Component, Input, Output, EventEmitter} from "@angular/core";
 	template : `
 		<ul *ngIf="items.length > pageSize" class="pagination pagination-lg">
 		      <li [class.disabled] = "currentPage == 1">
-		      	<a (click)="previous()">«</a>
+		      	<a (click)="previous()" style="cursor: pointer">«</a>
 		      </li>
-		      <li [class.active] = "currentPage == page" *ngFor="let page of pages" (click)="changePage(page)">
+		      <li [class.active] = "currentPage == page" style="cursor: pointer" *ngFor="let page of pages" (click)="changePage(page)">
 		      	<a>{{page}}</a>
 		      </li>
-		      <li [class.disabled] = "currentPage == pages.length">
+		      <li [class.disabled] = "currentPage == pages.length" style="cursor: pointer">
 		      	<a (click)="next()">»</a>
 		      </li>
    		 </ul>

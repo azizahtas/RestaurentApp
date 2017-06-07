@@ -8,7 +8,7 @@
 
     <div class="brand">
         <!--\\\\\\\ brand Start \\\\\\-->
-        <a href="Dashboard" style="text-decoration: none" >
+        <a href="" style="text-decoration: none" >
         <div class="logo" style="display:block"><span class="theme_color">Book Karo</span> .COM</div>
         </a>
     </div>
@@ -18,6 +18,7 @@
         <a class="menuItems" routerLinkActive="menuItemSelected" [routerLink]="['Dashboard']" pTooltip="Home" tooltipPosition="bottom"> <i class="fa fa-home"></i> </a>
         <a class="menuItems" routerLinkActive="menuItemSelected" [routerLink]="['Item']" pTooltip="Menu Item" tooltipPosition="bottom"> <i class="fa fa-tag"></i> </a>
         <a class="menuItems" routerLinkActive="menuItemSelected" [routerLink]="['Branch']" pTooltip="Booking" tooltipPosition="bottom"> <i class="fa fa-book"></i> </a>
+        <span class="menuItems" ><i style="color: wheat;">Hi {{_auth.getUserName()}}!!</i> </span>
         <!--\\\\\\\ header top bar start \\\\\\
         <a href="javascript:void(0);" class="menutoggle"> <i class="fa fa-bars"></i> </a>
         <div class="top_left">
@@ -105,15 +106,15 @@
                 </div>
             </div>
             -->
-            <div class="user_admin dropdown" *ngIf="!_auth.loggedIn()" pTooltip="User" tooltipPosition="bottom">
+            <div class="user_admin dropdown" *ngIf="!_auth.loggedIn()" >
                 <a href="" data-toggle="modal" data-target="#LoginSignup">
                 <img src="../assets/images/default-profile.png" width="50px" height="50px"/>
                 </a>
             </div>
-            <div class="user_admin dropdown" *ngIf="_auth.loggedIn()" pTooltip="User" tooltipPosition="bottom">
+            <div class="user_admin dropdown" *ngIf="_auth.loggedIn()" pTooltip="{{_auth.getUserName()}}" tooltipPosition="bottom">
                 <a href="javascript:void(0);" data-toggle="dropdown">
                 <img src="../assets/images/default-profile.png" width="50px" height="50px"/>
-              <!--  <span class="user_adminname"></span> -->
+                <!--<span class="user_adminname">Hi {{_auth.getUserName()}}!</span>-->
                 <b class="caret"></b> </a>
                 <ul class="dropdown-menu">
                     <div class="top_pointer"></div>
@@ -148,7 +149,7 @@
                 </ul>
                 <div *ngIf="!loginSuccess" class="tab-content" id="myTabContent">
                     <div id="login_form" class="tab-pane fade active in">
-                            <form *ngIf="!loginSuccess" #f="ngForm" class="form-horizontal row-border" novalidate>
+                            <form *ngIf="!loginSuccess" #f="ngForm" class="form-horizontal row-border" novalidate (keypress)="enterPressedSignIn($event,f)">
                                 <div class="form-group" [ngClass]="{'has-error': !email.valid && !email.pristine && email.touched, 'has-success':email.valid}">
                                     <label class="col-sm-3 control-label big">Email Id </label>
                                     <div class="col-sm-8">

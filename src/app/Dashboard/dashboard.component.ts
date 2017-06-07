@@ -5,9 +5,9 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
   //The time to show the next photo
-  private NextPhotoInterval:number = 5000;
+  public NextPhotoInterval:number = 6000;
   //Looping or not
-  private noLoopSlides:boolean = true;
+  public noLoopSlides:boolean = false;
   //Photos
   private slides:Array<any> = [];
 

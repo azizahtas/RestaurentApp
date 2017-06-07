@@ -274,4 +274,11 @@ public addToLocalStorage(token){
   localStorage.setItem('token', token);
 }
 
+public enterPressedSignIn(e,f){
+  /*if(f.valid){
+    if(e.key == 'Enter'){
+      console.log('Yes Ente Pressed');
+    }
+  }*/
+}
 }

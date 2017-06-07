@@ -54,7 +54,7 @@
         </div>
     </div>
     <div class="row" *ngIf="!view_Details">
-        <div class="col-md-4" *ngFor="let item of searchedMenuItems">
+        <div class="col-md-4" *ngFor="let item of pagedItems">
             <div class="caption-style">
                 <div>
                     <img alt="300x200" data-src="" style="width: 350px; height: 300px; padding-bottom: 30px" [src]="item.Img_Url">
@@ -71,6 +71,14 @@
             </div>
 
         </div>
+    </div>
+    <div class="row" *ngIf="!view_Details">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <pagation [items]="searchedMenuItems" [page-size]="pageSize" (page-changed)="onPageChanged($event)"></pagation>
+      </div>
+      <div class="col-md-4"></div>
+
     </div>
     <div class="row" *ngIf="view_Details">
         <div class="col-md-2"></div>
